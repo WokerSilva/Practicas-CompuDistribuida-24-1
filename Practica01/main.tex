@@ -17,6 +17,45 @@
     {\Large Algotitmo Dijkstra Distribuido}
 \end{center}
 
+\section*{Forma de compilar}
+
+\section*{Funcionamiento}
+
+\section*{Pseudocódigo del Algotitmo}
+\begin{verbatim}
+    1. Inicializar todas las distancias en D con un valor infinito relativo, 
+       ya que son desconocidas al principio, exceptuando la de a, qué se debe 
+       colocar en 0, pues la distancia de a a si mismo sería 0. C es copia de V
+    
+    2. Para todo vértice i en C se establece [PI]= a.
+    
+    3. Se obtiene el vértice s en C tal que no existe otro vértice w en C 
+       tal que (D[w] < D[s]). Para esto se envía un mensaje al nodo correspondiente 
+       y se regresa un mensaje de respuesta en donde se toma el tiempo y se le 
+       asigna a su distancia correspondiente. De manera concurrente el nodo destino 
+       realiza el mismo procedimiento para calcular su distancia a sus nodos vecinos
+       que no han sido visitados.
+    
+    4. Se elimina de C el vértice s.
+    
+    5. Para cada arista e en E de longitud l, que une el vértice s con algún 
+       otro vértice t en C,
+    
+    - Si l + D[s] < D[t], entonces:
+      -- Se establece D[t] :=  l + D[s].
+      -- Se establece P[t] := s.
+      
+    6. Se regresa al paso 4.
+\end{verbatim}
+    
+
+\section*{Desarrollo}
+
+
+
+
+
+
 
 
 \end{document}%---------------------- FIN DOCUMENTO---------------|
