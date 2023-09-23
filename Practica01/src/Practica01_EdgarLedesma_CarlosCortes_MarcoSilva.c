@@ -43,58 +43,63 @@ void print_grafica(struct grafica *g) {
 }
 
 void dijkstra(struct grafica *g, int src) {
- int visited[MAX_VERTICES] = {0};
-    int i, j;
+  int distancias[MAX_VERTICES];
+  int predecesores[MAX_VERTICES];
 
-    for (i = 0; i < g->nvertices; i++) {
-        distancia[i] = INT_MAX;
-        predecessors[i] = -1;
+  // Inicializar distancias y predecesores
+  for (int i = 0; i < g->nvertices; i++) {
+    distancias[i] = INT_MAX;
+    predecesores[i] = -1;
+  }
+  distancias[src] = 0;
+
+  // Cola de prioridad
+  struct {
+    int vertice;
+    int distancia;
+  } queue[MAX_VERTICES];
+  int cabeza = 0;
+  int tail = 0;
+
+  // Agregar el vértice origen a la cola
+  queue[tail++] = (struct {
+    vertice: src,
+    distancia: 0,
+  });
+
+  // Mientras la cola no esté vacía
+  while (cabeza < tail) {
+    // Obtener el vértice con la distancia más corta
+    struct vertice u = queue[cabeza++];
+
+    // Visitar el vértice u
+    for (int i = 0; i < g->nvertices; i++) {
+      // Si la distancia a través de u es menor que la distancia actual
+      if (distancias[u.vertice] + g->aristas[u.vertice * g->nvertices + i].weight < distancias[i]) {
+        // Actualizar la distancia
+        distancias[i] = distancias[u.vertice] + g->aristas[u.vertice * g->nvertices + i].weight;
+        // Actualizar el predecesor
+        predecesores[i] = u.vertice;
+
+        // Agregar el vértice i a la cola
+        queue[tail++] = (struct {
+          vertice: i,
+          distancia: distancias[i],
+        });
+      }
     }
+  }
 
-    distancia[src] = 0;
-
-    for (i = 0; i < g->nvertices; i++) {
-        int min_dist = INT_MAX;
-        int u;
-
-        for (j = 0; j < g->nvertices; j++) {
-            if (!visited[j] && distancia[j] < min_dist) {
-                min_dist = distancia[j];
-                u = j;
-            }
-        }
-
-        visited[u] = 1;
-
-        for (j = 0; j < g->nvertices; j++) {
-            if (!visited[j] && g->aristas[u][j] && (distancia[u] + g->aristas[u][j] < distancia[j])) {
-                distancia[j] = distancia[u] + g->aristas[u][j];
-                predecessors[j] = u;
-            }
-        }
-    }
+  // Imprimir resultados
+  for (int i = 0; i < g->nvertices; i++) {
+    printf("Vértice %d: %d\n", i, distancias[i]);
+  }
 }
 
-
 int main() {
-  struct Graph grafo;
-    grafo.nvertices = 5;
-
-    int distancia[MAX_VERTICES];
-    int predecessors[MAX_VERTICES];
-
-    for (int i = 0; i < grafo.nvertices; i++) {
-        for (int j = 0; j < grafo.nvertices; j++) {
-            grafo.aristas[i][j] = 0;
-        }
-    }
-
-    // Configurar las aristas del grafo
-    // grafo.aristas[i][j] = peso;
-
-    int src = 0;  // Cambia el origen según tu necesidad
-
-    dijkstra(&grafo, src, distancia, predecessors);
-
-    return 0;
+  struct grafica g;
+  inicio_grafica(&g, 10);
+  print_grafica(&g);
+  dijkstra(&g, 0);
+  return 0;
 }
