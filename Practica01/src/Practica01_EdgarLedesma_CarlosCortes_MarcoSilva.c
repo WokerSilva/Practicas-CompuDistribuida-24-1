@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <limits.h> // Necesario para INT_MAX
 
 #define MAX_VERTICES 100
 
@@ -33,6 +34,10 @@ void inicio_grafica(struct grafica *g, int nvertices) {
     g->vertices[i].retraso = 0;
   }
   g->aristas = malloc(sizeof(struct arista) * nvertices);
+  
+  // Inicializar la semilla para obtener números aleatorios diferentes en cada ejecución
+  srand(time(NULL));
+  
   for (int i = 0; i < nvertices; i++) {
     g->aristas[i].origen = i;
     g->aristas[i].destino = i + 1;
@@ -90,9 +95,11 @@ void dijkstra(struct grafica *g, int origen) {
         predecesores[i] = u.id;
 
         // Agregar el vértice i a la cola
-        cola[cola_final].vertice = i;
-        cola[cola_final].distancia = distancias[i];
-        cola_final++;
+        if (cabeza < cola_final) {
+          cola[cola_final].vertice = i;
+          cola[cola_final].distancia = distancias[i];
+          cola_final++;
+        }
       }
     }
   }
