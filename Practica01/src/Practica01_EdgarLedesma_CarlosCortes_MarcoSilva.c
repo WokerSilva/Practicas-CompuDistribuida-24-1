@@ -2,8 +2,11 @@
 #include <stdlib.h>
 #include <time.h>
 #include <limits.h> // Necesario para INT_MAX
+#include <pthread.h> // Necesario para la programación en hilos
 
 #define MAX_VERTICES 100
+#define NUM_THREADS 4 // Número de hilos
+
 
 // Estructura para representar un vértice en el grafo
 struct vertice {
@@ -110,12 +113,39 @@ void dijkstra(struct grafica *g, int origen) {
   }
 }
 
+// Función para calcular Dijkstra en una porción del grafo
+void *dijkstra_thread(void *arg) {
+    struct grafica *g = (struct grafica *)arg;
+    // Realizar el cálculo de Dijkstra en su porción del grafo aquí
+    // Utilizar g para acceder a la estructura de datos del grafo
+    return NULL;
+}
+
 int main() {
   struct grafica g;
   inicio_grafica(&g, 10);
   imprimir_grafica(&g);
-  dijkstra(&g, 0);
-  
+
+  // Crear hilos para realizar el cálculo de Dijkstra en paralelo
+  pthread_t threads[NUM_THREADS];
+
+  for (int i = 0; i < NUM_THREADS; i++) {
+    if (pthread_create(&threads[i], NULL, dijkstra_thread, &g) != 0) {
+      perror("Error al crear un hilo");
+      exit(EXIT_FAILURE);
+    }
+  }
+
+  // Esperar a que todos los hilos terminen
+  for (int i = 0; i < NUM_THREADS; i++) {
+    if (pthread_join(threads[i], NULL) != 0) {
+      perror("Error al unirse a un hilo");
+      exit(EXIT_FAILURE);
+    }
+  }
+
+  // Imprimir resultados y realizar otras tareas necesarias
+
   // Liberar memoria asignada dinámicamente
   free(g.vertices);
   free(g.aristas);
