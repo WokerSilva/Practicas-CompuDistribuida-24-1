@@ -28,31 +28,42 @@ struct grafica {
   struct arista *aristas;
 };
 
-// Función para inicializar el grafo
+// Función para inicializar el grafo con retrasos aleatorios
 void inicio_grafica(struct grafica *g, int nvertices) {
+  // Asignar el número de vértices al grafo
   g->nvertices = nvertices;
-  g->vertices = malloc(sizeof(struct vertice) * nvertices);
-  for (int i = 0; i < nvertices; i++) {
-    g->vertices[i].id = i;
-    g->vertices[i].retraso = 0;
-  }
-  g->aristas = malloc(sizeof(struct arista) * nvertices);
   
+  // Asignar memoria para el array de vértices en el grafo
+  g->vertices = malloc(sizeof(struct vertice) * nvertices);
+  
+  // Inicializar los vértices con valores predeterminados
+  for (int i = 0; i < nvertices; i++) {
+    g->vertices[i].id = i;       // Identificador único del vértice
+    g->vertices[i].retraso = 0;  // Inicialmente, no hay retraso
+  }
+  // Asignar memoria para el array de aristas en el grafo
+  g->aristas = malloc(sizeof(struct arista) * nvertices);
+
   // Inicializar la semilla para obtener números aleatorios diferentes en cada ejecución
   srand(time(NULL));
-  
-  for (int i = 0; i < nvertices; i++) {
-    g->aristas[i].origen = i;
-    g->aristas[i].destino = i + 1;
-    g->aristas[i].peso = rand() % 1000 + 1;
+  // Crear aristas entre vértices consecutivos y asignar retrasos aleatorios
+  for (int i = 0; i < nvertices - 1; i++) {
+    g->aristas[i].origen = i;         // Identificador del vértice de origen
+    g->aristas[i].destino = i + 1;    // Identificador del vértice de destino (conexión secuencial)
+    g->aristas[i].peso = rand() % 1000 + 1;  // Generar un retraso aleatorio entre 1 y 1000
+    g->vertices[i + 1].retraso = g->aristas[i].peso;  // Asignar el retraso al vértice de destino
   }
 }
 
 // Función para imprimir la información del grafo
 void imprimir_grafica(struct grafica *g) {
+  printf("Información del Grafo:\n");
+  printf("Nodo (Vertice)      | Retraso | \n");
+  printf("------------------------------\n");
   for (int i = 0; i < g->nvertices; i++) {
-    printf("Vertice %d: %d, %d\n", g->vertices[i].id, g->vertices[i].retraso, g->aristas[i].peso);
+    printf("%5d (Vertice %3d) | %4d    |\n", i, g->vertices[i].id, g->vertices[i].retraso);
   }
+  printf("\n");
 }
 
 // Algoritmo de Dijkstra para encontrar las distancias más cortas desde un vértice fuente
@@ -67,12 +78,12 @@ void dijkstra(struct grafica *g, int origen) {
   }
   distancias[origen] = 0; // La distancia desde el vértice fuente a sí mismo es 0
 
-
   // Cola de prioridad para almacenar vértices a explorar
   struct {
     int vertice;
     int distancia;
   } cola[MAX_VERTICES];
+
   int cabeza = 0;     // Puntero al inicio de la cola
   int cola_final = 0; // Puntero al final de la cola
 
@@ -106,11 +117,6 @@ void dijkstra(struct grafica *g, int origen) {
       }
     }
   }
-
-  // Imprimir resultados
-  for (int i = 0; i < g->nvertices; i++) {
-    printf("Vertice %d: %d\n", i, distancias[i]);
-  }
 }
 
 // Función para calcular Dijkstra en una porción del grafo
@@ -123,7 +129,7 @@ void *dijkstra_thread(void *arg) {
 
 int main() {
   struct grafica g;
-  inicio_grafica(&g, 10);
+  inicio_grafica(&g, 20);
   imprimir_grafica(&g);
 
   // Crear hilos para realizar el cálculo de Dijkstra en paralelo
@@ -143,8 +149,6 @@ int main() {
       exit(EXIT_FAILURE);
     }
   }
-
-  // Imprimir resultados y realizar otras tareas necesarias
 
   // Liberar memoria asignada dinámicamente
   free(g.vertices);
