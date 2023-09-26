@@ -2,41 +2,39 @@
 #include <limits.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include <time.h> // Necesario para generar números aleatorios
+#include <time.h>
 
 #define MAX_VERTICES 100
 #define INFINITY INT_MAX
-int predecesores[MAX_VERTICES];
-int nvertices;
 
+// Estructura para representar una arista (conexión) entre vértices
+struct arista {
+    int destino;
+    int peso;
+    struct arista* siguiente;
+};
 
 // Estructura para representar un vértice en el grafo
 struct vertice {
     int id;
-};
-
-// Estructura para representar una arista (conexión) entre vértices
-struct arista {
-    int origen;
-    int destino;
-    int peso;
+    struct arista* adyacente;
 };
 
 // Estructura para representar el grafo
 struct grafica {
     int nvertices;
     struct vertice vertices[MAX_VERTICES];
-    struct arista aristas[MAX_VERTICES * MAX_VERTICES];
 };
 
 // Función para inicializar el grafo con retrasos aleatorios
-void inicio_grafica(struct grafica *g, int nvertices) {
+void inicio_grafica(struct grafica* g, int nvertices) {
     // Asignar el número de vértices al grafo
     g->nvertices = nvertices;
 
     // Inicializar los vértices con valores predeterminados
     for (int i = 0; i < nvertices; i++) {
         g->vertices[i].id = i;
+        g->vertices[i].adyacente = NULL;
     }
 
     // Inicializar la semilla para obtener números aleatorios diferentes en cada ejecución
@@ -46,9 +44,11 @@ void inicio_grafica(struct grafica *g, int nvertices) {
     for (int i = 0; i < nvertices; i++) {
         for (int j = 0; j < nvertices; j++) {
             if (i != j) {
-                g->aristas[i * nvertices + j].origen = i;
-                g->aristas[i * nvertices + j].destino = j;
-                g->aristas[i * nvertices + j].peso = rand() % 1000 + 1;
+                struct arista* nueva_arista = (struct arista*)malloc(sizeof(struct arista));
+                nueva_arista->destino = j;
+                nueva_arista->peso = rand() % 1000 + 1;
+                nueva_arista->siguiente = g->vertices[i].adyacente;
+                g->vertices[i].adyacente = nueva_arista;
             }
         }
     }
@@ -69,22 +69,18 @@ int encontrar_minimo(int distancias[], bool conjunto_cerrado[], int nvertices) {
     return minimo_indice;
 }
 
-// Función para imprimir los retrasos mínimos y predecesores
-void imprimir_resultados(int distancias[], int predecesores[], int nvertices) {
-    printf("Nodo \t Retraso \t Ruta\n");
-    for (int i = 0; i < nvertices; i++) {
-        printf("%d \t %d \t\t ", i, distancias[i]);
-        int nodo_actual = i;
-        while (nodo_actual != -1) {
-            printf("%d ", nodo_actual);
-            nodo_actual = predecesores[nodo_actual];
-        }
-        printf("\n");
+// Función para imprimir la ruta desde el origen hasta un vértice dado
+void imprimir_ruta(int predecesores[], int nodo) {
+    if (predecesores[nodo] == -1) {
+        printf("%d", nodo);
+        return;
     }
+    imprimir_ruta(predecesores, predecesores[nodo]);
+    printf(" -> %d", nodo);
 }
 
 // Algoritmo de Dijkstra distribuido
-void dijkstra_distribuido(struct grafica *g, int origen) {
+void dijkstra_distribuido(struct grafica* g, int origen) {
     int nvertices = g->nvertices;
     int retrasos[MAX_VERTICES];
     int predecesores[MAX_VERTICES];
@@ -102,37 +98,32 @@ void dijkstra_distribuido(struct grafica *g, int origen) {
         int u = encontrar_minimo(retrasos, conjunto_cerrado, nvertices);
         conjunto_cerrado[u] = true;
 
-        for (int v = 0; v < nvertices; v++) {
-            if (!conjunto_cerrado[v] && g->aristas[u * nvertices + v].peso &&
-                retrasos[u] != INFINITY && retrasos[u] + g->aristas[u * nvertices + v].peso < retrasos[v]) {
-                retrasos[v] = retrasos[u] + g->aristas[u * nvertices + v].peso;
+        // Actualizar las distancias de los vértices adyacentes a u
+        struct arista* arista_actual = g->vertices[u].adyacente;
+        while (arista_actual != NULL) {
+            int v = arista_actual->destino;
+            if (!conjunto_cerrado[v] && retrasos[u] != INFINITY && retrasos[u] + arista_actual->peso < retrasos[v]) {
+                retrasos[v] = retrasos[u] + arista_actual->peso;
                 predecesores[v] = u;
             }
+            arista_actual = arista_actual->siguiente;
         }
     }
 
-    imprimir_resultados(retrasos, predecesores, nvertices);
-}
-
-// Función para imprimir la ruta que sigue el algoritmo
-void imprimir_ruta(int predecesores[], int nvertices) {
-    printf("\nRuta:\n");
+    printf("Nodo \t Retraso \t Ruta\n");
     for (int i = 0; i < nvertices; i++) {
-        int nodo_actual = i;
-        while (nodo_actual != -1) {
-            printf("%d ", nodo_actual);
-            nodo_actual = predecesores[nodo_actual];
-        }
+        printf("%d \t %d \t\t ", i, retrasos[i]);
+        imprimir_ruta(predecesores, i);
         printf("\n");
-    }    
+    }
 }
 
 int main() {
     struct grafica g;
-    inicio_grafica(&g, 20);
-    imprimir_ruta(predecesores, nvertices);
+    int nvertices = 20; // Cambia el número de vértices según tus necesidades
+    inicio_grafica(&g, nvertices);
     int origen = 0; // Cambia el origen según tus necesidades
     dijkstra_distribuido(&g, origen);
-    
+
     return 0;
 }
