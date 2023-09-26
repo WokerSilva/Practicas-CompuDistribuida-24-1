@@ -21,53 +21,32 @@
 
 \section*{Funcionamiento}
 
+Este código implementa el algoritmo de Dijkstra para encontrar el camino más corto en un grafo ponderado con múltiples procesos utilizando MPI
+
 \begin{itemize}
-   \item[1.] Definición de Estructuras de Datos:
-   \begin{itemize}
-      \item[//] Se definen tres estructuras de datos:
-      \begin{itemize}
-         \item struct vertice: Representa un vértice en el grafo con un identificador único (id) y un valor de retraso (retraso).
-         \item struct arista: Representa una arista (conexión) entre dos vértices con información sobre el vértice de origen (origen), el vértice de destino (destino) y el peso de la arista (peso).
-         \item struct grafica: Representa el grafo en sí y contiene el número de vértices (nvertices), un array de vértices (vertices) y un array de aristas (aristas).
-      \end{itemize}
-   \end{itemize}
+   \item[1.] Incluye las bibliotecas necesarias, incluyendo `<stdio.h>`, `<stdlib.h>`, `<limits.h>`, `<time.h>` y `<mpi.h>`.
 
-   \item[2.] Inicialización del Grafo ($inicio_grafica$):
-   \begin{itemize}
-      \item[//] Esta función inicializa el grafo con un número especificado de vértices (20 en este caso).
-      \item[//] Asigna memoria dinámicamente para los arrays de vértices y aristas.
-      \item[//] Inicializa los vértices con valores predeterminados, donde cada vértice tiene un identificador único y un retraso inicial de 0.
-      \item[//] Crea aristas entre vértices consecutivos y asigna retrasos aleatorios a las aristas. El retraso aleatorio se genera entre 1 y 1000.
-   \end{itemize}
+   \item[2.] Define la constante `INFINITY` como `INT MAX`, que se utiliza para representar una distancia infinita en el algoritmo de Dijkstra.
 
-   \item[3.] Impresión de la Información del Grafo ($imprimir_grafica$):
-   \begin{itemize}
-      \item[//] Esta función imprime la información del grafo en forma de tabla, mostrando el ID de cada vértice y su retraso.
-   \end{itemize}
+   \item[3.] Define una función `randomDelay` que genera un valor de retraso aleatorio entre 1 y 1000.
 
-   \item[4.] Algoritmo de Dijkstra (dijkstra):
-   \begin{itemize}
-      \item[//] Esta función implementa el algoritmo de Dijkstra para encontrar las distancias más cortas desde un vértice fuente dado (origen) hasta todos los demás vértices en el grafo.
-      \item[//] Utiliza dos arrays para almacenar la información:
-      \begin{itemize}
-         \item distancias: Almacena las distancias más cortas desde el vértice fuente a cada vértice en el grafo. Inicialmente, todas las distancias se establecen en $INT_MAX$ (infinito).
-         \item predecesores: Almacena los predecesores en el camino más corto desde el vértice fuente a cada vértice. Inicialmente, todos los predecesores se establecen en -1.
-      \end{itemize}
-      \item[//] Utiliza una cola de prioridad para almacenar los vértices a explorar y, en cada iteración, selecciona el vértice con la distancia más corta.
-      \item[//] Actualiza las distancias y los predecesores según las aristas y los pesos del grafo.
-   \end{itemize}
+   \item[4.] Define una función `minDelay` que encuentra el vértice con el retraso mínimo no visitado en el grafo.
 
-   \item[5.] Función $dijkstra_thread$ (sin implementación):
-   \begin{itemize}
-      \item[//] Esta función es la que se ejecutará en paralelo en cada hilo para calcular Dijkstra en una porción del grafo. Sin embargo, la implementación de esta función está incompleta y deberás completarla para que realice el cálculo de Dijkstra en su porción del grafo.
-   \end{itemize}
+   \item[5.] Define una función `printDijkstra` para imprimir los resultados del algoritmo de Dijkstra, incluyendo el retraso mínimo y la ruta desde el nodo 0 hasta cada nodo.
 
-   \item[6.] Función Principal (main):
-   \begin{itemize}
-      \item[//] En main, se crea una instancia del grafo g con 20 vértices y se imprime su información.
-      \item[//] Luego, se crea un número específico de hilos ($NUM_THREADS$) que ejecutarán la función $dijkstra_thread$ en paralelo en el mismo grafo.
-      \item[//] Se espera a que todos los hilos terminen su ejecución antes de liberar la memoria asignada dinámicamente para el grafo y finalizar el programa.
-   \end{itemize}
+   \item[6.] La función `dijkstra` implementa el algoritmo de Dijkstra en paralelo. Cada proceso MPI calcula las distancias parciales desde el nodo 0 hasta un subconjunto de nodos. Luego, se sincronizan los resultados entre los procesos para obtener la distancia mínima global.
+
+   \item[7.] La función `main` es la entrada principal del programa. Inicializa MPI, obtiene el rango y el tamaño del comunicador MPI, y solicita al usuario el número de nodos para el grafo.
+
+   \item[8.] Utiliza MPI para transmitir el número de nodos a todos los procesos.
+
+   \item[9.] Crea una matriz `graph` para representar el grafo y llena sus valores con retrasos aleatorios. Esto se hace solo en el proceso con rango 0.
+
+   \item[10.] Utiliza MPI para transmitir la matriz `graph` a todos los procesos.
+
+   \item[11.] Llama a la función `dijkstra` para calcular el camino más corto desde el nodo 0 hasta todos los demás nodos en paralelo.
+
+   \item[12.] Libera la memoria asignada para la matriz `graph` y finaliza MPI.
 \end{itemize}
 
 \section*{Pseudocódigo del Algotitmo}
