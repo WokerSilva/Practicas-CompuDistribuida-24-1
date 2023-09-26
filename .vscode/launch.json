@@ -8,8 +8,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": true,
-      "cwd": "c:/Users/marco/OneDrive/2018/Documentos/semestre24-1/Practicas-CompuDistribuida-24-1/Practica01/src",
-      "program": "c:/Users/marco/OneDrive/2018/Documentos/semestre24-1/Practicas-CompuDistribuida-24-1/Practica01/src/build/Debug/outDebug",
+      "cwd": "c:/Users/marco/OneDrive/2018/Documentos/semestre24-1/Practicas-CompuDistribuida-24-1",
+      "program": "c:/Users/marco/OneDrive/2018/Documentos/semestre24-1/Practicas-CompuDistribuida-24-1/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [

@@ -14,14 +14,24 @@
 \newpage
 
 \begin{center}
-    {\Large Algotitmo Dijkstra Distribuido}
+    {\Large Algoritmo Dijkstra Distribuido}
 \end{center}
 
 \section*{Forma de compilar}
+\subsubsection*{Se añade en el readme.txt}
 
-\section*{Funcionamiento}
+El comando para compilar es:
+\begin{center}
+    $\$$ gcc -o .$\backslash$Practica01EdgarLedesma$\_$CarlosCortes$\_$MarcoSilva .$\backslash$Practica01$\_$EdgarLedesma$\_$CarlosCortes$\_$MarcoSilva.c -pthread
+\end{center}
 
-\section*{Pseudocódigo del Algotitmo}
+El comando para ejecutar es:
+
+\begin{center}
+    $\$$ .$\backslash$Practica01$\_$EdgarLedesma$\_$CarlosCortes$\_$MarcoSilva
+\end{center}
+
+\section*{Pseudocódigo del Algoritmo}
 \begin{verbatim}
     1. Inicializar todas las distancias en D con un valor infinito relativo, 
        ya que son desconocidas al principio, exceptuando la de a, 
@@ -66,6 +76,39 @@
     
 
 \section*{Desarrollo}
+
+
+\section*{Funcionamiento}
+
+\begin{itemize}
+    \item \texttt{inicio$\_$grafica(struct grafica* g, int nvertices)}:
+    
+    Este método se encarga de inicializar el grafo con retrasos aleatorios. Recibe un puntero a una estructura \texttt{grafica} y el número de vértices \texttt{nvertices} como argumentos. Primero, asigna el número de vértices al grafo. Luego, inicializa cada vértice con valores predeterminados y genera aristas con pesos aleatorios entre 1 y 1000 que conectan los vértices.
+
+    \item \texttt{encontrar$\_$minimo(int distancias[], bool conjunto$\_$cerrado[], int nvertices)}: 
+    
+    Esta función encuentra el vértice con la distancia mínima en el conjunto de vértices no visitados. Recibe un arreglo de distancias, un arreglo booleano que indica si un vértice está en el conjunto cerrado y el número de vértices como argumentos. Devuelve el índice del vértice con la distancia mínima.
+
+    \item \texttt{imprimir$\_$ruta(int predecesores[], int nodo)}:
+    
+    Este método imprime la ruta desde el origen hasta un vértice dado. Recibe un arreglo de predecesores y el nodo de destino como argumentos. Utiliza la recursión para imprimir la ruta en el formato nodo1 $\rightarrow$ nodo2 $\rightarrow$ ... $\rightarrow$ nodoN.
+
+    \item \texttt{imprimir$\_$arbol$\_$generador(int predecesores[], int nvertices)}: 
+    
+    Este método imprime el árbol generador mínimo del grafo. Recibe un arreglo de predecesores y el número de vértices como argumentos. Muestra las aristas del árbol generador, indicando las conexiones entre los vértices.
+
+    \item \texttt{dijkstra$\_$distribuido(struct grafica* g, int origen)}: 
+    
+    Este es el método principal que implementa el algoritmo de Dijkstra distribuido. Recibe un puntero a una estructura \texttt{grafica} y el nodo de origen como argumentos. Calcula las rutas más cortas desde el nodo de origen hacia todos los demás nodos en el grafo. Utiliza el arreglo de distancias, el conjunto cerrado y los predecesores para realizar los cálculos. Al final, imprime las distancias y las rutas más cortas, así como el árbol generador mínimo del grafo.
+
+    \item \texttt{main()}: 
+    
+    La función principal del programa. En esta función se crea una estructura \texttt{grafica}, se establece el número de vértices y el nodo de origen. Luego, se llama a \texttt{dijkstra$\_$distribuido} para encontrar las rutas más cortas y mostrar los resultados.
+\end{itemize}
+
+
+
+
 
 
 

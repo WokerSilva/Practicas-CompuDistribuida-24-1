@@ -27,7 +27,7 @@ struct grafica {
 };
 
 // Función para inicializar el grafo con retrasos aleatorios
-void inicio_grafica(struct grafica* g, int nvertices) {
+void inicio_grafica(struct grafica* g, int nvertices){
     // Asignar el número de vértices al grafo
     g->nvertices = nvertices;
 
@@ -55,7 +55,7 @@ void inicio_grafica(struct grafica* g, int nvertices) {
 }
 
 // Función para encontrar el vértice con la distancia mínima
-int encontrar_minimo(int distancias[], bool conjunto_cerrado[], int nvertices) {
+int encontrar_minimo(int distancias[], bool conjunto_cerrado[], int nvertices){
     int minimo = INFINITY;
     int minimo_indice = -1;
 
@@ -70,7 +70,7 @@ int encontrar_minimo(int distancias[], bool conjunto_cerrado[], int nvertices) {
 }
 
 // Función para imprimir la ruta desde el origen hasta un vértice dado
-void imprimir_ruta(int predecesores[], int nodo) {
+void imprimir_ruta(int predecesores[], int nodo){
     if (predecesores[nodo] == -1) {
         printf("%d", nodo);
         return;
@@ -83,7 +83,7 @@ void imprimir_ruta(int predecesores[], int nodo) {
 void imprimir_arbol_generador(int predecesores[], int nvertices);
 
 // Algoritmo de Dijkstra distribuido
-void dijkstra_distribuido(struct grafica* g, int origen) {
+void dijkstra_distribuido(struct grafica* g, int origen){
     int nvertices = g->nvertices;
     int retrasos[MAX_VERTICES];
     int predecesores[MAX_VERTICES];
@@ -105,7 +105,7 @@ void dijkstra_distribuido(struct grafica* g, int origen) {
         struct arista* arista_actual = g->vertices[u].adyacente;
         while (arista_actual != NULL) {
             int v = arista_actual->destino;
-            if (!conjunto_cerrado[v] && retrasos[u] != INFINITY && retrasos[u] + arista_actual->peso < retrasos[v]) {
+            if (!conjunto_cerrado[v] && retrasos[u] != INFINITY && retrasos[u] + arista_actual->peso < retrasos[v]){
                 retrasos[v] = retrasos[u] + arista_actual->peso;
                 predecesores[v] = u;
             }
@@ -124,7 +124,7 @@ void dijkstra_distribuido(struct grafica* g, int origen) {
 }
 
 // Definición de la función para imprimir el árbol generador
-void imprimir_arbol_generador(int predecesores[], int nvertices) {
+void imprimir_arbol_generador(int predecesores[], int nvertices){
     printf("Arbol generador:\n");
     for (int i = 0; i < nvertices; i++) {
         if (predecesores[i] != -1) {
@@ -133,7 +133,7 @@ void imprimir_arbol_generador(int predecesores[], int nvertices) {
     }
 }
 
-int main() {
+int main(){
     struct grafica g;
     int nvertices = 2; // Cambia el número de vértices según tus necesidades
     inicio_grafica(&g, nvertices);
