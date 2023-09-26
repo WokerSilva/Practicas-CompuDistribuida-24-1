@@ -79,6 +79,9 @@ void imprimir_ruta(int predecesores[], int nodo) {
     printf(" -> %d", nodo);
 }
 
+// Declaración de la función para imprimir el árbol generador
+void imprimir_arbol_generador(int predecesores[], int nvertices);
+
 // Algoritmo de Dijkstra distribuido
 void dijkstra_distribuido(struct grafica* g, int origen) {
     int nvertices = g->nvertices;
@@ -116,13 +119,26 @@ void dijkstra_distribuido(struct grafica* g, int origen) {
         imprimir_ruta(predecesores, i);
         printf("\n");
     }
+
+    imprimir_arbol_generador(predecesores, nvertices);
+}
+
+// Definición de la función para imprimir el árbol generador
+void imprimir_arbol_generador(int predecesores[], int nvertices) {
+    printf("Arbol generador:\n");
+    for (int i = 0; i < nvertices; i++) {
+        if (predecesores[i] != -1) {
+            printf("%d -> %d\n", predecesores[i], i);
+        }
+    }
 }
 
 int main() {
     struct grafica g;
-    int nvertices = 20; // Cambia el número de vértices según tus necesidades
+    int nvertices = 2; // Cambia el número de vértices según tus necesidades
     inicio_grafica(&g, nvertices);
     int origen = 0; // Cambia el origen según tus necesidades
+
     dijkstra_distribuido(&g, origen);
 
     return 0;
