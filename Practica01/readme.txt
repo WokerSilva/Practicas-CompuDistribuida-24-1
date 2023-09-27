@@ -1,8 +1,7 @@
 Practica 01
 
 compilar:
-gcc -o .\Practica01EdgarLedesma CarlosCortes MarcoSilva .\Practica01 EdgarLedesma CarlosCortes MarcoSilva.c -pthread
+gcc -o Practica01_EdgarLedesma_CarlosCortes_MarcoSilva Practica01_EdgarLedesma_CarlosCortes_MarcoSilva.c
 
 ejecutar:
-\Practica01 EdgarLedesma CarlosCortes MarcoSilva
-
+.\Practica01_EdgarLedesma_CarlosCortes_MarcoSilva

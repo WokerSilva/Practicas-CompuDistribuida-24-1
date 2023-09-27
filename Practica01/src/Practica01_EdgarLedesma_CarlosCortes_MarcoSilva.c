@@ -142,7 +142,7 @@ void imprimir_arbol_generador(int predecesores[], int nvertices){
 
 int main(){
     struct grafica g;
-    int nvertices = 2; // Número de vértices
+    int nvertices = 20; // Número de vértices
     inicio_grafica(&g, nvertices);
     int origen = 0; // Origen del vértice
     dijkstra_distribuido(&g, origen);

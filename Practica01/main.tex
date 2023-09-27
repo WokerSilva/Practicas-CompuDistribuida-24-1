@@ -14,7 +14,7 @@
 \newpage
 
 \begin{center}
-    {\Large Algoritmo Dijkstra Distribuido}
+    {\huge Algoritmo Dijkstra Distribuido}
 \end{center}
 
 \section*{Forma de compilar}
@@ -77,19 +77,29 @@ El comando para ejecutar es:
 
 \section*{Desarrollo}
 
-Un algoritmo distribuido es un algoritmo que se ejecuta en múltiples procesos que se comunican entre sí a través de una red. El algoritmo de Dijkstra es un algoritmo de búsqueda de caminos más cortos. En la implementación distribuida del algoritmo de Dijkstra, cada vértice de la gráfica se ejecuta en un proceso separado. Los procesos se comunican entre sí para intercambiar información sobre las distancias entre los vértices. El código de la implementación distribuida del algoritmo de Dijkstra se divide en las siguientes partes:
+El algoritmo de Dijkstra es ampliamente utilizado para encontrar la ruta más corta entre dos nodos en un grafo ponderado. En esta implementación específica, estamos abordando una versión distribuida del algoritmo de Dijkstra, donde múltiples procesos se ejecutan simultáneamente para encontrar las rutas más cortas en una red de nodos interconectados.
+
 
 \begin{itemize}
-    \item Inicialización: En esta parte, se inicializa el grafo y se establece el nodo de origen.
-    \item Ejecución del algoritmo: En esta parte, se ejecuta el algoritmo de Dijkstra de forma iterativa. En cada iteración, se encuentra el vértice con la distancia más corta que aún no se ha visitado. Luego, se actualizan las distancias de los vértices vecinos del vértice seleccionado.
-    \item Impresión de los resultados: En esta parte, se imprimen las distancias y las rutas más cortas.
+    \item Inicialización
+
+    Primero se prepara la estructura del grafo y se selecciona un nodo de origen a partir del cual se calcularán las rutas más cortas hacia todos los demás nodos. Cada vértice se inicializa con un identificador único y una lista de aristas adyacentes. \\
+    
+    Además, se establece una semilla aleatoria para garantizar que los valores de peso de las aristas sean diferentes en cada ejecución, lo que permite simular diferentes escenarios de red.
+
+    \item Ejecución del algoritmo
+
+    La parte central del código es la implementación del algoritmo de Dijkstra distribuido. Cada vértice del grafo se ejecuta en un proceso o hilo separado. Los procesos se comunican entre sí para compartir información sobre las distancias entre los vértices. El algoritmo se ejecuta de manera iterativa, donde en cada iteración se busca el vértice con la distancia más corta que aún no ha sido visitado. Luego, se actualizan las distancias de los vértices vecinos en función de la distancia actual y el peso de las aristas. \\
+
+    La comunicación entre los procesos es una parte crítica de esta implementación. Para abordar esta complejidad, se utiliza la biblioteca de hilos de C++, que permite la ejecución concurrente de múltiples procesos. Cada vértice se ejecuta en un hilo separado, y los hilos comparten información a través de variables compartidas.
+
+    \item Impresión de los resultados
+
+    Una vez que se ha ejecutado el algoritmo de Dijkstra en todos los vértices y se han calculado las rutas más cortas, se imprimen los resultados. Esto incluye los retrasos del nodo de origen a todos los demás nodos y las rutas correspondientes.
 \end{itemize}
 
-\textbf{Dificultades en la simulación:} La mayor dificultad en la simulación de que el código fuera distribuido fue la implementación de la comunicación entre los procesos. Para resolver este problema, se utilizó la biblioteca de hilos de C$++$.
 
-\textbf{Uso de hilos:} Se utilizó la biblioteca de hilos de C$++$ para implementar la comunicación entre los procesos. Cada vértice se ejecuta en un hilo separado. Los hilos se comunican entre sí a través de variables compartidas.
-
-\textbf{Razones para el uso de hilos:} Se utilizó hilos para implementar la comunicación entre los procesos porque es una forma eficiente de realizar comunicaciones entre procesos en un sistema operativo multiproceso.
+\textbf{Uso de hilos} La elección de utilizar hilos en lugar de procesos separados se basa en la eficiencia y la facilidad de comunicación entre procesos en un sistema operativo multiproceso. Los hilos permiten que los vértices se ejecuten de manera concurrente y compartan datos de manera más eficiente, lo que es fundamental para la implementación distribuida de este algoritmo. \\
 
 
 \section*{Funcionamiento}
@@ -119,12 +129,6 @@ Un algoritmo distribuido es un algoritmo que se ejecuta en múltiples procesos q
     
     La función principal del programa. En esta función se crea una estructura \texttt{grafica}, se establece el número de vértices y el nodo de origen. Luego, se llama a \texttt{dijkstra$\_$distribuido} para encontrar las rutas más cortas y mostrar los resultados.
 \end{itemize}
-
-
-
-
-
-
 
 \end{document}%---------------------- FIN DOCUMENTO---------------|
 %-----------------------------------------------------------------|
