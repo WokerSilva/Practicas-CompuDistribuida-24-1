@@ -77,6 +77,20 @@ El comando para ejecutar es:
 
 \section*{Desarrollo}
 
+Un algoritmo distribuido es un algoritmo que se ejecuta en múltiples procesos que se comunican entre sí a través de una red. El algoritmo de Dijkstra es un algoritmo de búsqueda de caminos más cortos. En la implementación distribuida del algoritmo de Dijkstra, cada vértice de la gráfica se ejecuta en un proceso separado. Los procesos se comunican entre sí para intercambiar información sobre las distancias entre los vértices. El código de la implementación distribuida del algoritmo de Dijkstra se divide en las siguientes partes:
+
+\begin{itemize}
+    \item Inicialización: En esta parte, se inicializa el grafo y se establece el nodo de origen.
+    \item Ejecución del algoritmo: En esta parte, se ejecuta el algoritmo de Dijkstra de forma iterativa. En cada iteración, se encuentra el vértice con la distancia más corta que aún no se ha visitado. Luego, se actualizan las distancias de los vértices vecinos del vértice seleccionado.
+    \item Impresión de los resultados: En esta parte, se imprimen las distancias y las rutas más cortas.
+\end{itemize}
+
+\textbf{Dificultades en la simulación:} La mayor dificultad en la simulación de que el código fuera distribuido fue la implementación de la comunicación entre los procesos. Para resolver este problema, se utilizó la biblioteca de hilos de C$++$.
+
+\textbf{Uso de hilos:} Se utilizó la biblioteca de hilos de C$++$ para implementar la comunicación entre los procesos. Cada vértice se ejecuta en un hilo separado. Los hilos se comunican entre sí a través de variables compartidas.
+
+\textbf{Razones para el uso de hilos:} Se utilizó hilos para implementar la comunicación entre los procesos porque es una forma eficiente de realizar comunicaciones entre procesos en un sistema operativo multiproceso.
+
 
 \section*{Funcionamiento}
 
@@ -105,11 +119,6 @@ El comando para ejecutar es:
     
     La función principal del programa. En esta función se crea una estructura \texttt{grafica}, se establece el número de vértices y el nodo de origen. Luego, se llama a \texttt{dijkstra$\_$distribuido} para encontrar las rutas más cortas y mostrar los resultados.
 \end{itemize}
-
-
-
-
-
 
 
 

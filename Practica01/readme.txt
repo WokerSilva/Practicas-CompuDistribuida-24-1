@@ -5,3 +5,4 @@ gcc -o .\Practica01EdgarLedesma CarlosCortes MarcoSilva .\Practica01 EdgarLedesm
 
 ejecutar:
 \Practica01 EdgarLedesma CarlosCortes MarcoSilva
+
