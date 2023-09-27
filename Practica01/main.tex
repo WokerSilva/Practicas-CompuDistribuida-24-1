@@ -7,11 +7,9 @@
 \begin{document}%----------------------INICIO DOCUMENTO------------|
 %------------------------------------------------------------------|
 
-\newpage
-
 \input{portada}
 
-\newpage
+
 
 \begin{center}
     {\huge Algoritmo Dijkstra Distribuido}
@@ -22,7 +20,7 @@
 
 El comando para compilar es:
 \begin{center}
-    $\$$ gcc -o .$\backslash$Practica01EdgarLedesma$\_$CarlosCortes$\_$MarcoSilva .$\backslash$Practica01$\_$EdgarLedesma$\_$CarlosCortes$\_$MarcoSilva.c -pthread
+    $\$$ gcc -o Practica01EdgarLedesma$\_$CarlosCortes$\_$MarcoSilva Practica01$\_$EdgarLedesma$\_$CarlosCortes$\_$MarcoSilva.c -pthread
 \end{center}
 
 El comando para ejecutar es:
@@ -30,6 +28,24 @@ El comando para ejecutar es:
 \begin{center}
     $\$$ .$\backslash$Practica01$\_$EdgarLedesma$\_$CarlosCortes$\_$MarcoSilva
 \end{center}
+
+
+\subsection*{Entrada}
+El programa toma dos valores como entrada inicial desde dentro del código, es decir no es necesario que el usuario ingrese algo en terminal
+
+\begin{itemize}
+    \item \textit{nvertices}: El número de vértices que se desean en el grafo. Esto se especifica en la función \textsc{main()} donde se establece el valor de \textit{nvertices} (en este caso, 20).
+
+    \item \textit{vertice origen}: El programa define un vértice de origen, es decir, desde qué vértice se calcularán las rutas más cortas hacia todos los demás vértices. Esto se establece en la variable origen en la función \textsc{main()} (en este caso, el vértice 0).
+\end{itemize}
+
+\subsection*{Salida}
+\begin{itemize}
+    \item \textit{Retrasos}: Para cada vértice en el grafo, el retraso desde el vértice de origen hasta ese vértice y la ruta correspondiente desde el vértice de origen hasta ese vértice.
+
+    \item \textit{Árbol Generador}: También se imprime el árbol generador mínimo resultante del algoritmo de Dijkstra.
+\end{itemize}
+
 
 \section*{Pseudocódigo del Algoritmo}
 \begin{verbatim}
@@ -83,9 +99,7 @@ El algoritmo de Dijkstra es ampliamente utilizado para encontrar la ruta más co
 \begin{itemize}
     \item Inicialización
 
-    Primero se prepara la estructura del grafo y se selecciona un nodo de origen a partir del cual se calcularán las rutas más cortas hacia todos los demás nodos. Cada vértice se inicializa con un identificador único y una lista de aristas adyacentes. \\
-    
-    Además, se establece una semilla aleatoria para garantizar que los valores de peso de las aristas sean diferentes en cada ejecución, lo que permite simular diferentes escenarios de red.
+    Primero se prepara la estructura del grafo y se selecciona un nodo de origen a partir del cual se calcularán las rutas más cortas hacia todos los demás nodos. Cada vértice se inicializa con un identificador único y una lista de aristas adyacentes. Además, se establece una semilla aleatoria para garantizar que los valores de peso de las aristas sean diferentes en cada ejecución, lo que permite simular diferentes escenarios de red.
 
     \item Ejecución del algoritmo
 
