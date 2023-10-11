@@ -4,7 +4,7 @@
 
 #define NUM_GENERALES 10  // Número total de generales
 #define NUM_TRAIDORES 3  // Número de nodos traidores
-// #define MAX_RONDAS 100  // Número máximo de rondas antes de declarar un fracaso
+#define MAX_RONDAS 100  // Número máximo de rondas antes de declarar un fracaso
 #define F 1  // Número de generales traidores tolerados
 
 // Estructura de un nodo
@@ -133,7 +133,7 @@ int main() {
     int ronda = 0;
     int rey = -1;
 
-    while (ronda < 5) {
+    while (ronda < MAX_RONDAS) {
         realizarRonda(generales);
         imprimirResultado(ronda, generales);
 
@@ -148,9 +148,9 @@ int main() {
         ronda++;
     }
 
-    if (ronda >= 5) {
+    if (ronda >= MAX_RONDAS) {
         printf("Se alcanzó el límite de rondas sin consenso.\n");
     }
-
+    printf("0 para retirada, 1 para ataque");
     return 0;
 }
