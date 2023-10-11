@@ -3,9 +3,9 @@
 #include <time.h>
 
 #define NUM_GENERALES 10  // Número total de generales
-#define NUM_TRAIDORES 3  // Número de nodos traidores
-#define MAX_RONDAS 100  // Número máximo de rondas antes de declarar un fracaso
-#define F 1  // Número de generales traidores tolerados
+#define NUM_TRAIDORES 3   // Número de nodos traidores
+#define MAX_RONDAS 100    // Número máximo de rondas antes de declarar un fracaso
+#define F 1               // Número de generales traidores tolerados
 
 // Estructura de un nodo
 typedef struct {
@@ -13,9 +13,7 @@ typedef struct {
     int es_traidor;   
     int voto;  // 0 para retirada, 1 para ataque
     int mensaje;
-     int estrategia;  // Estrategia de voto de los generales (0 para retirada, 1 para ataque)
-    //  int plan;  // 0 para retirada, 1 para ataque
-    // int resultado;  // 0 para retirada, 1 para ataque
+     int estrategia;  // Estrategia de voto de los generales (0 para retirada, 1 para ataque)    
 } General;
 
 // Función para determinar si la votación es válida
@@ -41,15 +39,6 @@ int esVotacionValida(General generales[]) {
 }
 
 // Función para realizar una ronda de comunicación
-//void ronda(General generales[]) {
-    //for (int i = 0; i < NUM_GENERALES; i++) {
-      //  // En esta implementación, la estrategia de voto de los generales se elige aleatoriamente
-//        generales[i].voto = rand() % 2;
-        //generales[i].mensaje = generales[i].voto;
-    //}
-//}
-
-// Función para realizar una ronda de comunicación
 void realizarRonda(General generales[]) {
     // Itera a través de cada general en el arreglo generales.
     for (int i = 0; i < NUM_GENERALES; i++) {
@@ -61,17 +50,20 @@ void realizarRonda(General generales[]) {
 }
 
 int elegirRey(General generales[]) {
-    int rey = -1;
-    int max_id = -1;
+    // Inicialmente, no hay un rey elegido.
+    int rey = -1;      
+    // Se utiliza para rastrear el ID más alto de los generales no traidores.
+    int max_id = -1;    
 
     for (int i = 0; i < NUM_GENERALES; i++) {
+        // Verifica si el general actual no es un traidor y tiene un ID mayor que el máximo encontrado hasta ahora.
         if (!generales[i].es_traidor && generales[i].id > max_id) {
-            max_id = generales[i].id;
-            rey = i;
+            max_id = generales[i].id;  // Actualiza el máximo ID encontrado.
+            rey = i;                  // Actualiza el general elegido como rey.
         }
     }
 
-    return rey;
+    return rey;  // Devuelve el índice del general elegido como rey.
 }
 
 // Función para imprimir el resultado de una ronda y si la votación es válida
@@ -97,26 +89,6 @@ void imprimirResultado(int ronda, General generales[]) {
     printf("\n");
 }
 
-
-// Función para determinar el plan inicial de un nodo
-//int determinarPlanInicial() {
-//    return rand() % 2;  // 0 para retirada, 1 para ataque
-//}
-
-// Función para simular el comportamiento de un nodo traidor
-//int comportamientoTraidor() {
-//return rand() % 2;  // Simulará un comportamiento aleatorio
-//}
-   // Crear nodos y asignarles un plan inicial y traidor o no
-    //Nodo nodos[NUM_NODOS];
-    //for (int i = 0; i < NUM_NODOS; i++) {
-        //nodos[i].id = i;
-    //    nodos[i].es_traidor = (i < NUM_TRAIDORES) ? 1 : 0;
-    //    nodos[i].plan = determinarPlanInicial();
-    //    nodos[i].resultado = -1;  // -1 indica resultado indefinido
-    //}
-
-    // int rondas = 0;
 int main() {
     srand(time(NULL));
     General generales[NUM_GENERALES];
@@ -134,23 +106,28 @@ int main() {
     int rey = -1;
 
     while (ronda < MAX_RONDAS) {
+        // Realiza una ronda de comunicación entre los generales.
         realizarRonda(generales);
+        // Imprime el resultado de la ronda actual y verifica si la votación es válida.
         imprimirResultado(ronda, generales);
 
+        // Si la votación es válida, se rompe el ciclo while.
         if (esVotacionValida(generales)) {
             printf("¡Votación válida alcanzada!\n");
             break;
         } else {
+            // Si no se alcanza un consenso, se elige un nuevo "rey" de entre los generales no traidores.
             rey = elegirRey(generales);
             printf("No se alcanzó consenso, el General %d es el nuevo rey.\n", rey);
         }
 
-        ronda++;
+    ronda++;  // Incrementa el número de la ronda.
     }
 
+    // Si el límite de rondas (MAX_RONDAS) se alcanza sin llegar a un consenso, se muestra un mensaje.
     if (ronda >= MAX_RONDAS) {
         printf("Se alcanzó el límite de rondas sin consenso.\n");
     }
-    printf("0 para retirada, 1 para ataque");
+   
     return 0;
 }
