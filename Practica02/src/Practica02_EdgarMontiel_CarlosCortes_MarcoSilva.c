@@ -60,19 +60,43 @@ void realizarRonda(General generales[]) {
     }
 }
 
+int elegirRey(General generales[]) {
+    int rey = -1;
+    int max_id = -1;
+
+    for (int i = 0; i < NUM_GENERALES; i++) {
+        if (!generales[i].es_traidor && generales[i].id > max_id) {
+            max_id = generales[i].id;
+            rey = i;
+        }
+    }
+
+    return rey;
+}
+
 // Función para imprimir el resultado de una ronda y si la votación es válida
 void imprimirResultado(int ronda, General generales[]) {
+    // Imprime el número de la ronda actual.
     printf("Ronda %d:\n", ronda);
+    
+    // Itera a través de todos los generales y muestra su ID, si es traidor y su voto.
     for (int i = 0; i < NUM_GENERALES; i++) {
+        // Imprime el ID del general y si es traidor o no.
         printf("General %d (Traidor: %s) - Voto: %d\n", generales[i].id, generales[i].es_traidor ? "Sí" : "No", generales[i].voto);
     }
+    
+    // Verifica si la votación es válida utilizando la función esVotacionValida.
     if (esVotacionValida(generales)) {
+        // Si la votación es válida, imprime un mensaje indicando que es válida.
         printf("Votación válida.\n");
     } else {
+        // Si la votación no es válida, imprime un mensaje indicando que no es válida.
         printf("Votación no válida.\n");
-    }
+    }    
+    // Imprime una línea en blanco para separar los resultados de diferentes rondas.
     printf("\n");
 }
+
 
 // Función para determinar el plan inicial de un nodo
 //int determinarPlanInicial() {
@@ -83,10 +107,7 @@ void imprimirResultado(int ronda, General generales[]) {
 //int comportamientoTraidor() {
 //return rand() % 2;  // Simulará un comportamiento aleatorio
 //}
-
-
-
-    // Crear nodos y asignarles un plan inicial y traidor o no
+   // Crear nodos y asignarles un plan inicial y traidor o no
     //Nodo nodos[NUM_NODOS];
     //for (int i = 0; i < NUM_NODOS; i++) {
         //nodos[i].id = i;
@@ -98,7 +119,6 @@ void imprimirResultado(int ronda, General generales[]) {
     // int rondas = 0;
 int main() {
     srand(time(NULL));
-
     General generales[NUM_GENERALES];
     
     // Establecer la estrategia de voto para cada general (puede ajustarse según sea necesario)
@@ -111,6 +131,7 @@ int main() {
     }
 
     int ronda = 0;
+    int rey = -1;
 
     while (ronda < 5) {
         realizarRonda(generales);
@@ -119,6 +140,9 @@ int main() {
         if (esVotacionValida(generales)) {
             printf("¡Votación válida alcanzada!\n");
             break;
+        } else {
+            rey = elegirRey(generales);
+            printf("No se alcanzó consenso, el General %d es el nuevo rey.\n", rey);
         }
 
         ronda++;
@@ -130,4 +154,3 @@ int main() {
 
     return 0;
 }
-
