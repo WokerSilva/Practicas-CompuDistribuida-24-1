@@ -41,6 +41,55 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\begin{enumerate}
+  \item \textbf{Definición de constantes y estructuras:}
+  \begin{itemize}
+      \item Se definen constantes, como el número total de generales (\texttt{NUM\_GENERALES}), el número de generales traidores (\texttt{NUM\_TRAIDORES}), el número máximo de rondas (\texttt{MAX\_RONDAS}), y el número de generales traidores tolerados (\texttt{F}).
+      \item Se define una estructura \texttt{General} que almacena información sobre cada general, incluyendo su identificación (\texttt{id}), si es traidor (\texttt{es\_traidor}), su voto (\texttt{voto}), su mensaje (\texttt{mensaje}), y su estrategia de voto (\texttt{estrategia}).
+  \end{itemize}
+  
+  \item \textbf{Función para determinar si la votación es válida (\texttt{esVotacionValida}):}
+  \begin{itemize}
+      \item Esta función cuenta los votos a favor de atacar y retirarse y verifica si se alcanza la mayoría requerida para validar la votación.
+  \end{itemize}
+  
+  \item \textbf{Función para realizar una ronda de comunicación (\texttt{realizarRonda}):}
+  \begin{itemize}
+      \item En cada ronda, los generales eligen aleatoriamente si votar por atacar (1) o retirarse (0) según su estrategia.
+      \item El voto se almacena en el campo \texttt{voto} y se copia en el campo \texttt{mensaje} del general.
+  \end{itemize}
+  
+  \item \textbf{Función para elegir un rey (\texttt{elegirRey}):}
+  \begin{itemize}
+      \item Esta función determina cuál de los generales no traidores tiene el ID más alto y lo elige como rey.
+  \end{itemize}
+  
+  \item \textbf{Función para imprimir el resultado de una ronda (\texttt{imprimirResultado}):}
+  \begin{itemize}
+      \item Esta función imprime el número de la ronda actual, muestra información sobre cada general (ID, si es traidor y su voto), y verifica si la votación es válida llamando a la función \texttt{esVotacionValida}.
+  \end{itemize}
+  
+  \item \textbf{Función principal (\texttt{main}):}
+  \begin{itemize}
+      \item Se inicializa el generador de números aleatorios.
+      \item Se crea un arreglo de generales y se establecen sus atributos iniciales, como ID, si son traidores, voto indefinido, mensaje indefinido y estrategia de voto aleatoria.
+  \end{itemize}
+  
+  \item \textbf{Ciclo principal (\texttt{while}):}
+  \begin{itemize}
+      \item Se realiza un ciclo de rondas de comunicación mientras no se alcance un consenso o se supere el número máximo de rondas definido en \texttt{MAX\_RONDAS}.
+      \item En cada ronda, se realiza una ronda de comunicación aleatoria (\texttt{realizarRonda}) y se muestra el resultado (\texttt{imprimirResultado}).
+      \item Se verifica si la votación es válida. Si es válida, se muestra un mensaje y se rompe el ciclo.
+      \item Si no se alcanza un consenso, se elige un nuevo rey entre los generales no traidores (\texttt{elegirRey}).
+  \end{itemize}
+  
+  \item Si se supera el límite de rondas definido en \texttt{MAX\_RONDAS}, se muestra un mensaje indicando que se alcanzó el límite de rondas sin consenso.
+\end{enumerate}
+
+
+
+
+
 
 
 
