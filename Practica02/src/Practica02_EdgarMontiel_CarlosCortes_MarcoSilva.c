@@ -13,7 +13,7 @@ typedef struct {
     int es_traidor;   
     int voto;  // 0 para retirada, 1 para ataque
     int mensaje;
-
+     int estrategia;  // Estrategia de voto de los generales (0 para retirada, 1 para ataque)
     //  int plan;  // 0 para retirada, 1 para ataque
     // int resultado;  // 0 para retirada, 1 para ataque
 } General;
@@ -23,7 +23,9 @@ int esVotacionValida(General generales[]) {
     int votos_ataque = 0;
     int votos_retirada = 0;
 
+    // Esta estructura for se utiliza para contar los votos a favor de cada opción, ataque o retirada.
     for (int i = 0; i < NUM_GENERALES; i++) {
+        // Si el general no es traidor, se incrementa el contador de votos correspondiente a la opción que votó.
         if (!generales[i].es_traidor) {
             if (generales[i].voto == 1) {
                 votos_ataque++;
@@ -39,19 +41,21 @@ int esVotacionValida(General generales[]) {
 }
 
 // Función para realizar una ronda de comunicación
-void ronda(General generales[]) {
-    for (int i = 0; i < NUM_GENERALES; i++) {
-        // En esta implementación, la estrategia de voto de los generales se elige aleatoriamente
-        generales[i].voto = rand() % 2;
-        generales[i].mensaje = generales[i].voto;
-    }
-}
+//void ronda(General generales[]) {
+    //for (int i = 0; i < NUM_GENERALES; i++) {
+      //  // En esta implementación, la estrategia de voto de los generales se elige aleatoriamente
+//        generales[i].voto = rand() % 2;
+        //generales[i].mensaje = generales[i].voto;
+    //}
+//}
 
 // Función para realizar una ronda de comunicación
 void realizarRonda(General generales[]) {
+    // Itera a través de cada general en el arreglo generales.
     for (int i = 0; i < NUM_GENERALES; i++) {
-        // En esta implementación, la estrategia de voto de los generales se elige aleatoriamente
+        // Elige un voto aleatorio para el general.
         generales[i].voto = rand() % 2;
+        // Asigna el voto aleatorio al mensaje del general.
         generales[i].mensaje = generales[i].voto;
     }
 }
@@ -69,11 +73,6 @@ void imprimirResultado(int ronda, General generales[]) {
     }
     printf("\n");
 }
-
-
-
-
-
 
 // Función para determinar el plan inicial de un nodo
 //int determinarPlanInicial() {
@@ -100,19 +99,20 @@ void imprimirResultado(int ronda, General generales[]) {
 int main() {
     srand(time(NULL));
 
-    // Crear generales y asignarles un ID único y traidor o no
     General generales[NUM_GENERALES];
+    
+    // Establecer la estrategia de voto para cada general (puede ajustarse según sea necesario)
     for (int i = 0; i < NUM_GENERALES; i++) {
         generales[i].id = i;
-        generales[i].es_traidor = (i == rand() % NUM_GENERALES && i < NUM_TRAIDORES) ? 1 : 0;
+        generales[i].es_traidor = (i < NUM_TRAIDORES) ? 1 : 0;
         generales[i].voto = -1;  // -1 indica voto indefinido
         generales[i].mensaje = -1;  // -1 indica mensaje indefinido
+        generales[i].estrategia = rand() % 2;  // Estrategia de voto aleatoria
     }
 
     int ronda = 0;
 
-    // Realizar rondas hasta que se alcance un resultado válido o se alcance el límite de rondas
-    while (ronda < 100) {
+    while (ronda < 5) {
         realizarRonda(generales);
         imprimirResultado(ronda, generales);
 
@@ -124,7 +124,7 @@ int main() {
         ronda++;
     }
 
-    if (ronda >= 100) {
+    if (ronda >= 5) {
         printf("Se alcanzó el límite de rondas sin consenso.\n");
     }
 
