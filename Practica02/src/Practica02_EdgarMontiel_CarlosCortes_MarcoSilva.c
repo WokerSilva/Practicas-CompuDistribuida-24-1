@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-#define NUM_NODOS 10  // Número total de nodos
+#define NUM_GENERALES 10  // Número total de generales
 #define NUM_TRAIDORES 3  // Número de nodos traidores
 // #define MAX_RONDAS 100  // Número máximo de rondas antes de declarar un fracaso
 #define F 1  // Número de generales traidores tolerados
@@ -40,6 +40,15 @@ int esVotacionValida(General generales[]) {
 
 // Función para realizar una ronda de comunicación
 void ronda(General generales[]) {
+    for (int i = 0; i < NUM_GENERALES; i++) {
+        // En esta implementación, la estrategia de voto de los generales se elige aleatoriamente
+        generales[i].voto = rand() % 2;
+        generales[i].mensaje = generales[i].voto;
+    }
+}
+
+// Función para realizar una ronda de comunicación
+void realizarRonda(General generales[]) {
     for (int i = 0; i < NUM_GENERALES; i++) {
         // En esta implementación, la estrategia de voto de los generales se elige aleatoriamente
         generales[i].voto = rand() % 2;
@@ -88,7 +97,7 @@ void imprimirResultado(int ronda, General generales[]) {
     //}
 
     // int rondas = 0;
-    int main() {
+int main() {
     srand(time(NULL));
 
     // Crear generales y asignarles un ID único y traidor o no
@@ -103,8 +112,8 @@ void imprimirResultado(int ronda, General generales[]) {
     int ronda = 0;
 
     // Realizar rondas hasta que se alcance un resultado válido o se alcance el límite de rondas
-    while (ronda < 100) {  // Puedes ajustar el límite de rondas según tus necesidades
-        ronda(generales);
+    while (ronda < 100) {
+        realizarRonda(generales);
         imprimirResultado(ronda, generales);
 
         if (esVotacionValida(generales)) {
