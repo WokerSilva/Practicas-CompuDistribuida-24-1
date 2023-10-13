@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include <time.h>
 
-#define MAX_VERTICES 100
+#define MAX_VERTICES 200
 #define INFINITY INT_MAX
 
 // Estructura para representar una arista (conexión) entre vértices
@@ -142,7 +142,7 @@ void imprimir_arbol_generador(int predecesores[], int nvertices){
 
 int main(){
     struct grafica g;
-    int nvertices = 20; // Número de vértices
+    int nvertices = 199; // Número de vértices
     inicio_grafica(&g, nvertices);
     int origen = 0; // Origen del vértice
     dijkstra_distribuido(&g, origen);
