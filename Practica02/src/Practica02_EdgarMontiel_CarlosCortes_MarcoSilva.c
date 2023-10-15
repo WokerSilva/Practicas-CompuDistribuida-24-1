@@ -1,3 +1,7 @@
+//Marco Silva Huerta 316205326
+//Edgar Montiel Ledesma 317317794
+//Carlos Daniel Cortes Jimenez 420004846
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
