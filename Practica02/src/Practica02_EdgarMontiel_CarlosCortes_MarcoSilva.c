@@ -57,23 +57,37 @@ void realizarRonda(General generales[], int rank, int size) {
     MPI_Bcast(generales, NUM_GENERALES * sizeof(General), MPI_BYTE, 0, MPI_COMM_WORLD);
 }
 
-// Función para elegir un "rey" entre los generales no traidores
 int elegirRey(General generales[], int rank, int size) {
-    // Inicialmente, no hay un rey elegido.
-    int rey = -1;      
-    // Se utiliza para rastrear el ID más alto de los generales no traidores.
-    int max_id = -1;    
+    // Inicializa el vector `generales_no_traidores` con todos los generales no traidores.
+    // Declaración de un arreglo para almacenar los índices de generales no traidores.
+    int generales_no_traidores[NUM_GENERALES];
+    // Inicialización de una variable para rastrear el número de generales no traidores encontrados.
+    int num_generales_no_traidores = 0;
 
+    // Iteración a través de todos los generales (índices del 0 al NUM_GENERALES - 1).
     for (int i = 0; i < NUM_GENERALES; i++) {
-        // Verifica si el general actual no es un traidor y tiene un ID mayor que el máximo encontrado hasta ahora.
-        if (!generales[i].es_traidor && generales[i].id > max_id) {
-            max_id = generales[i].id;  // Actualiza el máximo ID encontrado.
-            rey = i;                  // Actualiza el general elegido como rey.
+        // Verifica si el general en la posición 'i' no es un traidor.
+        if (!generales[i].es_traidor) {
+            // Si no es un traidor, agrega su índice al arreglo generales_no_traidores.
+            generales_no_traidores[num_generales_no_traidores++] = i;
         }
     }
 
-    return rey;  // Devuelve el índice del general elegido como rey.
+
+    // Verifica que haya generales no traidores.
+    if (num_generales_no_traidores == 0) {
+        printf("Error: no hay generales no traidores.\n");
+        return -1;
+    }
+
+    // Genera un índice aleatorio dentro del rango de generales no traidores.
+    int indice_aleatorio = rand() % num_generales_no_traidores;
+
+    // Devuelve el índice del general elegido como rey.
+    return generales_no_traidores[indice_aleatorio];
 }
+
+
 
 // Función para imprimir el resultado de una ronda y si la votación es válida
 void imprimirResultado(int ronda, General generales[], int rank, int size) {
@@ -153,6 +167,5 @@ int main(int argc, char **argv) {
     }
 
     MPI_Finalize();
-
     return 0;
 }
