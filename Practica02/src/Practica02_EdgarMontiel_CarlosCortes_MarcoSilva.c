@@ -47,8 +47,13 @@ int esVotacionValida(General generales[], int rank, int size) {
 void realizarRonda(General generales[], int rank, int size) {
     // Itera a través de cada general en el arreglo generales.
     for (int i = 0; i < NUM_GENERALES; i++) {
-        // Elige un voto aleatorio para el general.
-        generales[i].voto = rand() % 2;
+        // Si el general no es el que está ejecutando la función, elige un voto aleatorio.
+        if (i != rank) {
+            generales[i].voto = rand() % 2;
+        } else {
+            // Si el general es el que está ejecutando la función, no vota por sí mismo.
+            generales[i].voto = -1;
+        }
         // Asigna el voto aleatorio al mensaje del general.
         generales[i].mensaje = generales[i].voto;
     }
@@ -56,6 +61,7 @@ void realizarRonda(General generales[], int rank, int size) {
     // Comunicación entre generales usando Broadcast
     MPI_Bcast(generales, NUM_GENERALES * sizeof(General), MPI_BYTE, 0, MPI_COMM_WORLD);
 }
+
 
 int elegirRey(General generales[], int rank, int size) {
     // Inicializa el vector `generales_no_traidores` con todos los generales no traidores.
@@ -73,7 +79,6 @@ int elegirRey(General generales[], int rank, int size) {
         }
     }
 
-
     // Verifica que haya generales no traidores.
     if (num_generales_no_traidores == 0) {
         printf("Error: no hay generales no traidores.\n");
@@ -86,7 +91,6 @@ int elegirRey(General generales[], int rank, int size) {
     // Devuelve el índice del general elegido como rey.
     return generales_no_traidores[indice_aleatorio];
 }
-
 
 
 // Función para imprimir el resultado de una ronda y si la votación es válida
