@@ -57,6 +57,11 @@
   \begin{itemize}
       \item En cada ronda, los generales eligen aleatoriamente si votar por atacar (1) o retirarse (0) según su estrategia.
       \item El voto se almacena en el campo \texttt{voto} y se copia en el campo \texttt{mensaje} del general.
+      \item Se ha modificado la función para evitar que los generales voten por sí mismos. Ahora, un general no puede votar por sí mismo.            
+      \begin{itemize}
+        \item[] Si el general actual no es el mismo que el proceso actual, elige un voto aleatorio para el general.
+                Asigna el voto aleatorio al mensaje del general. Si el general actual es el mismo que el proceso actual, establece el voto del general en -1. Asigna el voto aleatorio al mensaje del general. Utiliza la función MPI Bcast para comunicar el arreglo generales a todos los procesos.
+      \end{itemize}      
   \end{itemize}
   
   \item \textbf{Función para elegir un rey (\texttt{elegirRey}):}
@@ -147,22 +152,6 @@
 12. Finalizar el algoritmo.
 
 \end{verbatim}
-
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section*{Desarrollo}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-
-
-
-
 
 \end{document}%---------------------- FIN DOCUMENTO---------------|
 %-----------------------------------------------------------------|
