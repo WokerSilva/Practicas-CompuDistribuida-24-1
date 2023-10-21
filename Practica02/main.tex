@@ -8,30 +8,150 @@
 %------------------------------------------------------------------|
 
 \newpage
-
 \input{portada}
-
 \newpage
 
 \begin{center}
-    {\Large Titulo de la practica}
+    {\huge Consenso}
 \end{center}
 
-\section*{Forma de compilar}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{Ejecución del programa}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\subsection*{Compilar}
+\begin{center}    
+    mpicc Practica02$\_$EdgarMontiel$\_$CarlosCortes$\_$MarcoSilva.c -o generales
+\end{center}
+
+\subsection*{Ejecutar}
+\begin{center}
+    $.\slash$generales
+\end{center}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section*{Funcionamiento}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section*{Pseudocódigo del Algotitmo}
-    
+\begin{enumerate}
+  \item \textbf{Definición de constantes y estructuras:}
+  \begin{itemize}
+      \item Se definen constantes, como el número total de generales (\texttt{NUM\_GENERALES}), el número de generales traidores (\texttt{NUM\_TRAIDORES}), el número máximo de rondas (\texttt{MAX\_RONDAS}), y el número de generales traidores tolerados (\texttt{F}).
+      \item Se define una estructura \texttt{General} que almacena información sobre cada general, incluyendo su identificación (\texttt{id}), si es traidor (\texttt{es\_traidor}), su voto (\texttt{voto}), su mensaje (\texttt{mensaje}), y su estrategia de voto (\texttt{estrategia}).
+  \end{itemize}
+  
+  \item \textbf{Función para determinar si la votación es válida (\texttt{esVotacionValida}):}
+  \begin{itemize}
+      \item Esta función cuenta los votos a favor de atacar y retirarse y verifica si se alcanza la mayoría requerida para validar la votación.
+  \end{itemize}
+  
+  \item \textbf{Función para realizar una ronda de comunicación (\texttt{realizarRonda}):}
+  \begin{itemize}
+      \item En cada ronda, los generales eligen aleatoriamente si votar por atacar (1) o retirarse (0) según su estrategia.
+      \item El voto se almacena en el campo \texttt{voto} y se copia en el campo \texttt{mensaje} del general.
+      \item Se ha modificado la función para evitar que los generales voten por sí mismos. Ahora, un general no puede votar por sí mismo.            
+      \begin{itemize}
+        \item[] Si el general actual no es el mismo que el proceso actual, elige un voto aleatorio para el general.
+                Asigna el voto aleatorio al mensaje del general. Si el general actual es el mismo que el proceso actual, establece el voto del general en -1. Asigna el voto aleatorio al mensaje del general. Utiliza la función MPI Bcast para comunicar el arreglo generales a todos los procesos.
+      \end{itemize}      
+  \end{itemize}
+  
+  \item \textbf{Función para elegir un rey (\texttt{elegirRey}):}
+  \begin{itemize}
+      \item Esta función determina cuál de los generales no traidores tiene el ID más alto y lo elige como rey.
+  \end{itemize}
+  
+  \item \textbf{Función para imprimir el resultado de una ronda (\texttt{imprimirResultado}):}
+  \begin{itemize}
+      \item Esta función imprime el número de la ronda actual, muestra información sobre cada general (ID, si es traidor y su voto), y verifica si la votación es válida llamando a la función \texttt{esVotacionValida}.
+  \end{itemize}
+  
+  \item \textbf{Función principal (\texttt{main}):}
+  \begin{itemize}
+      \item Se inicializa el generador de números aleatorios.
+      \item Se crea un arreglo de generales y se establecen sus atributos iniciales, como ID, si son traidores, voto indefinido, mensaje indefinido y estrategia de voto aleatoria.
+  \end{itemize}
+  
+  \item \textbf{Ciclo principal (\texttt{while}):}
+  \begin{itemize}
+      \item Se realiza un ciclo de rondas de comunicación mientras no se alcance un consenso o se supere el número máximo de rondas definido en \texttt{MAX\_RONDAS}.
+      \item En cada ronda, se realiza una ronda de comunicación aleatoria (\texttt{realizarRonda}) y se muestra el resultado (\texttt{imprimirResultado}).
+      \item Se verifica si la votación es válida. Si es válida, se muestra un mensaje y se rompe el ciclo.
+      \item Si no se alcanza un consenso, se elige un nuevo rey entre los generales no traidores (\texttt{elegirRey}).
+  \end{itemize}
+  
+  \item Si se supera el límite de rondas definido en \texttt{MAX\_RONDAS}, se muestra un mensaje indicando que se alcanzó el límite de rondas sin consenso.
+\end{enumerate}
 
-\section*{Desarrollo}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{Pseudocódigo del Algoritmo}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\subsection*{Algoritmo del Rey}
+\begin{verbatim}
+1. Definir las constantes:
+   - NÚMERO_DE_GENERALES: número total de generales
+   - NÚMERO_DE_TRAIDORES: número de generales traidores
+   - F: número de generales traidores tolerados
 
+2. Crear una estructura General con los siguientes campos:
+   - id (entero): identificador del general
+   - es_traidor (booleano): verdadero si el general es traidor, falso si es leal
+   - voto (entero): 0 para retirada, 1 para ataque
+   - mensaje (entero): mensaje enviado por el general en la ronda actual
 
+3. Inicializar una lista de generales con NÚMERO_DE_GENERALES elementos.
 
+4. Inicializar una variable REY con un valor aleatorio en el rango
+               [0, NÚMERO_DE_GENERALES - 1]
+   - Esto selecciona aleatoriamente a un general como el Rey sin 
+     que los demás lo sepan.
 
+5. Para cada general en la lista de generales:
+   - Asignar un id único al general.
+   - Determinar si el general es traidor (F generales serán traidores,
+     incluyendo el Rey).
+   - Inicializar el voto y el mensaje del general.
 
+6. En cada ronda:
+   - Cada general, incluido el Rey, elige su voto (0 para retirada, 1 para ataque) 
+     de acuerdo a su estrategia.
 
+7. Calcular el resultado de la ronda:
+   - Inicializar las variables votos_ataque y votos_retirada a 0.
+   - Para cada general en la lista de generales:
+     - Si el general no es traidor:
+       - Incrementar votos_ataque o votos_retirada según el voto del general.
+     - Si el general es traidor:
+       - Tomar el voto del general según su estrategia.
+
+8. Verificar si la votación es válida:
+   - Calcular la mayoría requerida como "(NÚMERO_DE_GENERALES / 2) + F".
+   - Si votos_ataque >= mayoría o votos_retirada >= mayoría, la votación es válida.
+
+9. Imprimir el resultado de la ronda y si la votación es válida o no.
+
+10. Repetir las rondas hasta que se alcance un resultado válido o se llegue a un 
+    límite de rondas.
+
+11. Si se supera el límite de rondas, se considera que no hay consenso y se imprime
+    un mensaje indicando la falta de consenso.
+
+12. Finalizar el algoritmo.
+
+\end{verbatim}
 
 \end{document}%---------------------- FIN DOCUMENTO---------------|
 %-----------------------------------------------------------------|
