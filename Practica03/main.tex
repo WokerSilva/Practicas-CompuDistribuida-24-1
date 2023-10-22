@@ -69,32 +69,6 @@
     \item \textbf{Coordinador:} anuncia la identidad del proceso elegido
 \end{itemize}
 
-\subsection*{Inicio del algoritmo}
-\begin{itemize}
-    \item La elección comienza cuando un proceso se da cuenta (debido a los \textit{timeouts}) de que el coordinador ha fallado
-    \begin{itemize}
-        \item Varios procesos pueden descubrirlo de forma concurrente
-        \item Timeout = T = $2 \times T_{\text{Transmisión de un mensaje}} + T_{\text{procesado de un mensaje}}$
-    \end{itemize}
-    \item Si un proceso sabe que tiene el id (no fallido) más alto
-    \begin{itemize}
-        \item Se elige a sí mismo coordinador enviando el mensaje coordinador a todos los de identificador más bajo (proceso abusón)
-    \end{itemize}
-    \item Si no tiene el id (no fallido) más alto
-    \begin{itemize}
-        \item Manda un mensaje elección a todos los de id más alto y espera un mensaje respuesta
-        \begin{itemize}
-            \item Si tras un tiempoT no recibe ningún mensaje respuesta, ir al paso 1
-            \item Si recibe un mensaje respuesta, espera un mensaje coordinador
-            \begin{itemize}
-                \item Si recibe un mensaje coordinador, fija su variable e; al id que está contenido en dicho mensaje
-                \item Si no recibe ningún mensaje, comienza otra nueva elección                
-            \end{itemize}
-        \end{itemize}
-    \end{itemize}
-    \item Si un proceso se recupera o se lanza un proceso sustituto con el mismo id, éste comienza una nueva elección, aunque el coordinador actual esté funcionando
-\end{itemize}
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -114,9 +88,42 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
 \begin{verbatim}
-    Aquí va el código 
+    Algoritmo Abusivo
+
+    Variables Globales:
+    - Mi_Id: identificador único del proceso
+    - Coordinador_Actual: identificador del coordinador actual
+    - Esperando_Coordinador: booleano que indica si el proceso 
+       está esperando un mensaje de coordinador
+    
+    Inicio del Algoritmo:
+    
+    Cuando un proceso detecta que el coordinador ha fallado debido a un timeout:
+        - Iniciar la elección:
+        
+        Si Mi_Id es el identificador más alto no fallido:
+            - Mi_Id es el nuevo coordinador
+            - Enviar un mensaje de coordinador a todos los procesos con 
+               identificadores más bajos (proceso abusón)
+    
+        Si Mi_Id no es el identificador más alto no fallido:
+            - Enviar un mensaje elección a todos los procesos con 
+               identificadores más altos
+            - Esperar un mensaje de respuesta durante un tiempo T
+            - Si no se recibe ningún mensaje de respuesta después de un tiempo T:
+                - Regresar al paso de Inicio del Algoritmo
+            - Si se recibe un mensaje de respuesta:
+                - Esperar un mensaje de coordinador
+                - Si se recibe un mensaje de coordinador:
+                    - Coordinador_Actual = Id contenido en el mensaje de 
+                       coordinador
+                - Si no se recibe un mensaje de coordinador:
+                    - Iniciar una nueva elección
+    
+    Si un proceso se recupera o se lanza un proceso sustituto con el mismo Mi_Id:
+        - Iniciar una nueva elección, independientemente de si el coordinador 
+           actual está funcionando
 \end{verbatim}
 
 %-----------------------------------------------------------------|
