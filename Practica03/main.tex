@@ -11,7 +11,7 @@
 \newpage
 
 \begin{center}
-    {\huge PRACTICA 03}
+    {\huge Algoritmo abusón (bully)}
 \end{center}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -31,6 +31,70 @@
 \begin{center}
     Forma de Ejecutar
 \end{center}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{Elección distribuida}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection*{Consideraciones}
+
+\begin{itemize}
+    \item Permite la caída de procesos durante la elección
+     \begin{itemize}
+        \item Utiliza \textit{timeouts} para detectar fallos de procesos
+     \end{itemize}
+    \item Supone comunicación fiable
+    \item Cada proceso conoce qué procesos tienen identificadores mayores y puede comunicarse con ellos
+\end{itemize}
+
+\subsection*{Funcionamiento resumido}
+
+\begin{enumerate}
+    \item El convocante envía \textit{mensajes elección} a los procesos de $id$ mayor
+    \item Si ninguno le responde, \textit{multidifunde} que es el nuevo coordinador
+    \item Si alguno le responde, el convocante inicial queda en espera, y los procesos que responden
+         inician un nuevo proceso de elección como convocantes (vuelta al paso 1)
+\end{enumerate}
+
+\subsection*{Tipos de mensaje}
+
+\begin{itemize}
+    \item \textbf{Elección:} anuncia un proceso de elección
+    \item \textbf{Respuesta:} respuesta a un mensaje de elección
+    \item \textbf{Coordinador:} anuncia la identidad del proceso elegido
+\end{itemize}
+
+\subsection*{Inicio del algoritmo}
+\begin{itemize}
+    \item La elección comienza cuando un proceso se da cuenta (debido a los \textit{timeouts}) de que el coordinador ha fallado
+    \begin{itemize}
+        \item Varios procesos pueden descubrirlo de forma concurrente
+        \item Timeout = T = $2 \times T_{\text{Transmisión de un mensaje}} + T_{\text{procesado de un mensaje}}$
+    \end{itemize}
+    \item Si un proceso sabe que tiene el id (no fallido) más alto
+    \begin{itemize}
+        \item Se elige a sí mismo coordinador enviando el mensaje coordinador a todos los de identificador más bajo (proceso abusón)
+    \end{itemize}
+    \item Si no tiene el id (no fallido) más alto
+    \begin{itemize}
+        \item Manda un mensaje elección a todos los de id más alto y espera un mensaje respuesta
+        \begin{itemize}
+            \item Si tras un tiempoT no recibe ningún mensaje respuesta, ir al paso 1
+            \item Si recibe un mensaje respuesta, espera un mensaje coordinador
+            \begin{itemize}
+                \item Si recibe un mensaje coordinador, fija su variable e; al id que está contenido en dicho mensaje
+                \item Si no recibe ningún mensaje, comienza otra nueva elección                
+            \end{itemize}
+        \end{itemize}
+    \end{itemize}
+    \item Si un proceso se recupera o se lanza un proceso sustituto con el mismo id, éste comienza una nueva elección, aunque el coordinador actual esté funcionando
+\end{itemize}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
