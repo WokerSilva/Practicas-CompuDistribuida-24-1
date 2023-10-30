@@ -9,8 +9,9 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <time.h>
+#include <unistd.h> // Necesario para sleep() en algunas plataformas
 
-#define NUM_NODOS 10 // Número total de nodos en el sistema
+#define NUM_NODOS 5 // Número total de nodos en el sistema
 
 // Estructura de un nodo
 typedef struct {
@@ -21,25 +22,57 @@ typedef struct {
 
 // Función para simular un timeout con probabilidad de fallo
 bool simulaTimeout() {
-    int randomValue = rand() % 100; // Genera un valor aleatorio entre 0 y 99
-    return randomValue < 30; 
+    return (rand() % 100) < 30; // 30% de probabilidad de timeout
 }
 
 // Función para iniciar una elección
 void iniciarElección(Nodo* nodos, int myId) {
+    // Inicializa una variable para el líder como -1 (sin líder).
     int lider = -1;
+    // Inicializa una variable booleana para indicar si este nodo es el convocante como verdadero.
     bool soyConvocante = true;
+    // Inicializa una variable booleana para indicar si este nodo está esperando un coordinador como falso.
+    bool esperandoCoordinador = false;
 
+    // Recorre todos los nodos con identificadores más altos que el propio.
     for (int i = myId + 1; i < NUM_NODOS; i++) {
+        // Verifica si el nodo i está vivo y si no se simula un timeout
+        // Si ambas condiciones son verdaderas, significa que el nodo i responde a la elección.
         if (nodos[i].estaVivo && !simulaTimeout()) {
-            soyConvocante = false;
-            break;
+            // Establece la variable como falso porque al menos un nodo responde.
+            soyConvocante = false; 
+            break; // Sale del bucle para no ver más nodos 
         }
     }
 
     if (soyConvocante) {
         lider = myId;
         printf("Nodo %d: Soy el líder. Mi ID: %d\n", myId, lider);
+    } else {
+        for (int i = myId + 1; i < NUM_NODOS; i++) {
+            if (nodos[i].estaVivo) {
+                // Envía mensaje de elección a procesos con id mayor
+                printf("Nodo %d: Envía mensaje elección a Nodo %d\n", myId, i);
+                // Espera por un mensaje de respuesta (simulado)
+                sleep(1); // Simula la espera de respuesta
+                if (!simulaTimeout()) {
+                    // Recibe un mensaje de respuesta
+                    esperandoCoordinador = true;
+                    printf("Nodo %d: Recibió mensaje de respuesta de Nodo %d\n", myId, i);
+                    break;
+                }
+            }
+        }
+    }
+
+    if (esperandoCoordinador) {
+        // Espera por un mensaje de coordinador
+        sleep(2); // Simula la espera de coordinador
+        if (!simulaTimeout()) {
+            // Recibe un mensaje de coordinador
+            lider = myId; // Este nodo es el líder
+            printf("Nodo %d: Soy el líder. Mi ID: %d\n", myId, lider);
+        }
     }
 
     nodos[myId].lider = lider;
