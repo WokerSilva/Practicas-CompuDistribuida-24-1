@@ -10,43 +10,63 @@
 #include <stdbool.h>
 #include <time.h>
 
+#define NUM_NODOS 10 // Número total de nodos en el sistema
+
+// Estructura de un nodo
+typedef struct {
+    int id;
+    bool estaVivo;
+    int lider;
+} Nodo;
+
 // Función para simular un timeout con probabilidad de fallo
 bool simulaTimeout() {
-    return (rand() % 10) < 3; // 30% de probabilidad de timeout
+    int randomValue = rand() % 100; // Genera un valor aleatorio entre 0 y 99
+    return randomValue < 30; 
 }
 
 // Función para iniciar una elección
-void inicioDeEleccIon(int myId, int totalNodos) {
+void iniciarElección(Nodo* nodos, int myId) {
     int lider = -1;
-    bool soyLider = true;
-    
-    for (int i = myId + 1; i < totalNodos; i++) {
-        if (!simulaTimeout()) {
-            soyLider = false;
+    bool soyConvocante = true;
+
+    for (int i = myId + 1; i < NUM_NODOS; i++) {
+        if (nodos[i].estaVivo && !simulaTimeout()) {
+            soyConvocante = false;
             break;
         }
     }
-    
-    if (soyLider) {
+
+    if (soyConvocante) {
         lider = myId;
-        printf("Soy tu padre. My ID: %d\n", lider);
+        printf("Nodo %d: Soy el líder. Mi ID: %d\n", myId, lider);
     }
-    
-    // Lectura de los nodos
-    for (int i = 0; i < totalNodos; i++) {
-        printf("Nodo %d reporte: Estoy  %s. nuevo lider %d.\n", i, i == myId ? "vivo" : "muerto", lider);
-    }
+
+    nodos[myId].lider = lider;
 }
 
 int main() {
     srand(time(NULL)); // Inicializar la semilla para simular fallos
-    
+
+    Nodo nodos[NUM_NODOS];
+
+    // Inicializar nodos
+    for (int i = 0; i < NUM_NODOS; i++) {
+        nodos[i].id = i;
+        nodos[i].estaVivo = true;
+        nodos[i].lider = -1;
+    }
+
     int myId = 2; // ID del nodo actual
-    int totalNodos = 5; // Número total de nodos en el sistema
-    
-    printf("Nodo %d inicio de elección.\n", myId);
-    
-    inicioDeEleccIon(myId, totalNodos);
-    
+
+    printf("Nodo %d: Inicio de elección.\n", myId);
+
+    iniciarElección(nodos, myId);
+
+    // Reportar resultados
+    for (int i = 0; i < NUM_NODOS; i++) {
+        printf("Nodo %d: Estoy %s. Nuevo líder es Nodo %d.\n", i, nodos[i].estaVivo ? "vivo" : "muerto", nodos[i].lider);
+    }
+
     return 0;
 }
