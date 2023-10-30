@@ -11,13 +11,14 @@
 #include <time.h>
 #include <unistd.h> // Necesario para sleep() en algunas plataformas
 
-#define NUM_NODOS 5 // Número total de nodos en el sistema
+#define NUM_NODOS 25 // Número total de nodos en el sistema
 
 // Estructura de un nodo
 typedef struct {
     int id;
     bool estaVivo;
     int lider;
+    bool esperandoRespuesta; // Nueva variable para indicar si se está esperando una respuesta
 } Nodo;
 
 // Función para simular un timeout con probabilidad de fallo
@@ -58,6 +59,7 @@ void iniciarElección(Nodo* nodos, int myId) {
                 if (!simulaTimeout()) {
                     // Recibe un mensaje de respuesta
                     esperandoCoordinador = true;
+                    nodos[i].esperandoRespuesta = true; // Marcar el nodo como esperando una respuesta
                     printf("Nodo %d: Recibió mensaje de respuesta de Nodo %d\n", myId, i);
                     break;
                 }
@@ -75,7 +77,13 @@ void iniciarElección(Nodo* nodos, int myId) {
         }
     }
 
-    nodos[myId].lider = lider;
+    for (int i = 0; i < NUM_NODOS; i++) {
+        if (nodos[i].esperandoRespuesta) {
+            // Restablecer el estado de espera de respuesta de los nodos
+            nodos[i].esperandoRespuesta = false;
+        }
+        nodos[i].lider = lider;
+    }
 }
 
 int main() {
