@@ -100,6 +100,9 @@ mpicc Practica03_EdgarMontiel_CarlosCortes_MarcoSilva.c -o Practica03_EdgarMonti
        está esperando un mensaje de coordinador
     
     Inicio del Algoritmo:
+
+    Declaración de una estructura de Nodo 
+        - Define una estructura llamada Nodo que almacena información sobre un nodo, incluyendo su ID, su estado de estar vivo o muerto, el ID de su líder y un indicador de si está esperando una respuesta.
     
     Cuando un proceso detecta que el coordinador ha fallado debido a un timeout:
         - Iniciar la elección:
@@ -122,10 +125,22 @@ mpicc Practica03_EdgarMontiel_CarlosCortes_MarcoSilva.c -o Practica03_EdgarMonti
                        coordinador
                 - Si no se recibe un mensaje de coordinador:
                     - Iniciar una nueva elección
+
+    Función simulaTimeout
+        - Esta función simula un timeout con una probabilidad del 30% de fallar. Devuelve true si se produce un timeout y false en caso contrario.
     
     Si un proceso se recupera o se lanza un proceso sustituto con el mismo Mi_Id:
         - Iniciar una nueva elección, independientemente de si el coordinador 
            actual está funcionando
+
+    Función main:
+    - En la función principal, se inicializa la semilla aleatoria y se inicia MPI.
+    - Se crea un arreglo de estructuras Nodo llamado nodos, y se inicializan los nodos con sus IDs, estado de estar vivo y líderes.
+    - Se define un valor para myId, que representa el ID del nodo actual.
+    - Se imprime un mensaje para indicar el inicio de la elección.
+    - Se llama a la función iniciarElección para el nodo actual.
+    - Luego, se imprime el resultado de la elección para cada nodo en el sistema.
+    - Finalmente, se llama a MPI_Finalize para finalizar la comunicación MPI.
 \end{verbatim}
 
 %-----------------------------------------------------------------|
