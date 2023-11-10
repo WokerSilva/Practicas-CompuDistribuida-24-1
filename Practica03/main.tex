@@ -11,7 +11,7 @@
 \newpage
 
 \begin{center}
-    {\huge PRACTICA 03}
+    {\huge Algoritmo abusón (bully)}
 \end{center}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -23,14 +23,54 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection*{Compilar}
-\begin{center}    
-    Forma de Compilar 
-\end{center}
 
+\begin{small}
+    \begin{verbatim}
+mpicc Practica03_EdgarMontiel_CarlosCortes_MarcoSilva.c -o Practica03_EdgarMontiel_CarlosCortes_MarcoSilva
+    \end{verbatim}            
+\end{small}
 \subsection*{Ejecutar}
-\begin{center}
-    Forma de Ejecutar
-\end{center}
+\begin{verbatim}
+    ./Practica03_EdgarMontiel_CarlosCortes_MarcoSilva
+\end{verbatim}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{Elección distribuida}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection*{Consideraciones}
+
+\begin{itemize}
+    \item Permite la caída de procesos durante la elección
+     \begin{itemize}
+        \item Utiliza \textit{timeouts} para detectar fallos de procesos
+     \end{itemize}
+    \item Supone comunicación fiable
+    \item Cada proceso conoce qué procesos tienen identificadores mayores y puede comunicarse con ellos
+\end{itemize}
+
+\subsection*{Funcionamiento resumido}
+
+\begin{enumerate}
+    \item El convocante envía \textit{mensajes elección} a los procesos de $id$ mayor
+    \item Si ninguno le responde, \textit{multidifunde} que es el nuevo coordinador
+    \item Si alguno le responde, el convocante inicial queda en espera, y los procesos que responden
+         inician un nuevo proceso de elección como convocantes (vuelta al paso 1)
+\end{enumerate}
+
+\subsection*{Tipos de mensaje}
+
+\begin{itemize}
+    \item \textbf{Elección:} anuncia un proceso de elección
+    \item \textbf{Respuesta:} respuesta a un mensaje de elección
+    \item \textbf{Coordinador:} anuncia la identidad del proceso elegido
+\end{itemize}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -50,9 +90,57 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
 \begin{verbatim}
-    Aquí va el código 
+    Algoritmo Abusivo
+
+    Variables Globales:
+    - Mi_Id: identificador único del proceso
+    - Coordinador_Actual: identificador del coordinador actual
+    - Esperando_Coordinador: booleano que indica si el proceso 
+       está esperando un mensaje de coordinador
+    
+    Inicio del Algoritmo:
+
+    Declaración de una estructura de Nodo 
+        - Define una estructura llamada Nodo que almacena información sobre un nodo, incluyendo su ID, su estado de estar vivo o muerto, el ID de su líder y un indicador de si está esperando una respuesta.
+    
+    Cuando un proceso detecta que el coordinador ha fallado debido a un timeout:
+        - Iniciar la elección:
+        
+        Si Mi_Id es el identificador más alto no fallido:
+            - Mi_Id es el nuevo coordinador
+            - Enviar un mensaje de coordinador a todos los procesos con 
+               identificadores más bajos (proceso abusón)
+    
+        Si Mi_Id no es el identificador más alto no fallido:
+            - Enviar un mensaje elección a todos los procesos con 
+               identificadores más altos
+            - Esperar un mensaje de respuesta durante un tiempo T
+            - Si no se recibe ningún mensaje de respuesta después de un tiempo T:
+                - Regresar al paso de Inicio del Algoritmo
+            - Si se recibe un mensaje de respuesta:
+                - Esperar un mensaje de coordinador
+                - Si se recibe un mensaje de coordinador:
+                    - Coordinador_Actual = Id contenido en el mensaje de 
+                       coordinador
+                - Si no se recibe un mensaje de coordinador:
+                    - Iniciar una nueva elección
+
+    Función simulaTimeout
+        - Esta función simula un timeout con una probabilidad del 30% de fallar. Devuelve true si se produce un timeout y false en caso contrario.
+    
+    Si un proceso se recupera o se lanza un proceso sustituto con el mismo Mi_Id:
+        - Iniciar una nueva elección, independientemente de si el coordinador 
+           actual está funcionando
+
+    Función main:
+    - En la función principal, se inicializa la semilla aleatoria y se inicia MPI.
+    - Se crea un arreglo de estructuras Nodo llamado nodos, y se inicializan los nodos con sus IDs, estado de estar vivo y líderes.
+    - Se define un valor para myId, que representa el ID del nodo actual.
+    - Se imprime un mensaje para indicar el inicio de la elección.
+    - Se llama a la función iniciarElección para el nodo actual.
+    - Luego, se imprime el resultado de la elección para cada nodo en el sistema.
+    - Finalmente, se llama a MPI_Finalize para finalizar la comunicación MPI.
 \end{verbatim}
 
 %-----------------------------------------------------------------|

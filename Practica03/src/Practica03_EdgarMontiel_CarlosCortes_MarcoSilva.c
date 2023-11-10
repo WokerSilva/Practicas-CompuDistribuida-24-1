@@ -10,9 +10,13 @@
 #include <stdbool.h>
 #include <time.h>
 #include <unistd.h> // Necesario para sleep() en algunas plataformas
+<<<<<<< HEAD
 #include <mpi.h> // Incluimos MPI
-
 #define NUM_NODOS 25  // Número total de nodos en el sistema
+=======
+
+#define NUM_NODOS 25 // Número total de nodos en el sistema
+>>>>>>> testMarcoP3
 
 // Estructura de un nodo
 typedef struct {
@@ -26,8 +30,14 @@ typedef struct {
 bool simulaTimeout() {
     return (rand() % 100) < 30; // 30% de probabilidad de timeout
 }
+<<<<<<< HEAD
 // Función para iniciar una elección
 void iniciarElección(Nodo* nodos, int myId, int rank, int size) {
+=======
+
+// Función para iniciar una elección
+void iniciarElección(Nodo* nodos, int myId) {
+>>>>>>> testMarcoP3
     // Inicializa una variable para el líder como -1 (sin líder).
     int lider = -1;
     // Inicializa una variable booleana para indicar si este nodo es el convocante como verdadero.
@@ -54,6 +64,7 @@ void iniciarElección(Nodo* nodos, int myId, int rank, int size) {
             if (nodos[i].estaVivo) {
                 // Envía mensaje de elección a procesos con id mayor
                 printf("Nodo %d: Envía mensaje elección a Nodo %d\n", myId, i);
+<<<<<<< HEAD
                 MPI_Send(&myId, 1, MPI_INT, i % size, 0, MPI_COMM_WORLD);
                 // Espera por un mensaje de respuesta (simulado)
                 sleep(1);
@@ -65,6 +76,14 @@ void iniciarElección(Nodo* nodos, int myId, int rank, int size) {
                     // Recibe un mensaje de respuesta
                     esperandoCoordinador = true;
                     nodos[i].esperandoRespuesta = true;
+=======
+                // Espera por un mensaje de respuesta (simulado)
+                sleep(1); // Simula la espera de respuesta
+                if (!simulaTimeout()) {
+                    // Recibe un mensaje de respuesta
+                    esperandoCoordinador = true;
+                    nodos[i].esperandoRespuesta = true; // Marcar el nodo como esperando una respuesta
+>>>>>>> testMarcoP3
                     printf("Nodo %d: Recibió mensaje de respuesta de Nodo %d\n", myId, i);
                     break;
                 }
@@ -77,11 +96,14 @@ void iniciarElección(Nodo* nodos, int myId, int rank, int size) {
         sleep(2); // Simula la espera de coordinador
         if (!simulaTimeout()) {
             // Recibe un mensaje de coordinador
+<<<<<<< HEAD
             for (int i = 0; i < size; i++) {
                 if (i != rank) {
                     MPI_Send(&myId, 1, MPI_INT, i, 1, MPI_COMM_WORLD);
                 }
             }
+=======
+>>>>>>> testMarcoP3
             lider = myId; // Este nodo es el líder
             printf("Nodo %d: Soy el líder. Mi ID: %d\n", myId, lider);
         }
@@ -96,6 +118,7 @@ void iniciarElección(Nodo* nodos, int myId, int rank, int size) {
     }
 }
 
+<<<<<<< HEAD
 int main(int argc, char** argv) {
     srand(time(NULL));  // Inicializar la semilla para simular fallos
 
@@ -104,6 +127,10 @@ int main(int argc, char** argv) {
     MPI_Init(&argc, &argv);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
+=======
+int main() {
+    srand(time(NULL)); // Inicializar la semilla para simular fallos
+>>>>>>> testMarcoP3
 
     Nodo nodos[NUM_NODOS];
 
@@ -118,14 +145,21 @@ int main(int argc, char** argv) {
 
     printf("Nodo %d: Inicio de elección.\n", myId);
 
+<<<<<<< HEAD
     iniciarElección(nodos, myId, rank, size);
+=======
+    iniciarElección(nodos, myId);
+>>>>>>> testMarcoP3
 
     // Reportar resultados
     for (int i = 0; i < NUM_NODOS; i++) {
         printf("Nodo %d: Estoy %s. Nuevo líder es Nodo %d.\n", i, nodos[i].estaVivo ? "vivo" : "muerto", nodos[i].lider);
     }
 
+<<<<<<< HEAD
     MPI_Finalize();
 
+=======
+>>>>>>> testMarcoP3
     return 0;
 }
