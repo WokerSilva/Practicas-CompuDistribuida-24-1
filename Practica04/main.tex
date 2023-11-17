@@ -30,13 +30,10 @@ mezcla (Merge Sort), como sigue:
     \item Se genera de forma aleatoria un arreglo de números enteros a ordenar.
     \item Se imprime en pantalla el arreglo original (antes de ordenar)
     \item Se reparte el arreglo entre los nodos de la forma más equitativa posible.
-    \item Cada nodo utiliza algún algoritmo de ordenamiento secuencial para ordenar susub-arreglo local.
+    \item Cada nodo utiliza algún algoritmo de ordenamiento secuencial para ordenar sub-arreglo local.
     \item Se utiliza el procedimiento de mezcla para ir incorporando los resultados parciales.
     \item Se imprime el resultado final, que debe ser el arreglo original pero ordenado.
 \end{itemize}
-
-
-
 
 
 
@@ -78,7 +75,35 @@ mezcla (Merge Sort), como sigue:
 
 
 \begin{verbatim}
-    Aquí va el código 
+1. Generar un arreglo de números enteros aleatorios.
+    1.1. Definir el tamaño del arreglo.
+    1.2. Para cada posición en el arreglo, generar un número entero aleatorio
+         y asignarlo a esa posición.
+
+2. Imprimir el arreglo original.
+    2.1. Recorrer el arreglo y imprimir cada elemento.
+
+3. Dividir el arreglo entre los nodos de la forma más equitativa posible.
+    3.1. Determinar el número de nodos disponibles.
+    3.2. Calcular el tamaño de los sub-arreglos dividiendo el tamaño del 
+         arreglo original entre el número de nodos.
+    3.3. Para cada nodo, asignarle un sub-arreglo del arreglo original.
+
+4. Para cada nodo:
+    4.1. Ordenar el sub-arreglo local utilizando un algoritmo de ordenamiento
+         secuencial.
+        4.1.1. Puede ser cualquier algoritmo de ordenamiento secuencial, como el
+               ordenamiento por inserción, burbuja, etc.
+
+5. Utilizar el procedimiento de mezcla para incorporar los resultados parciales.
+    5.1. Mientras haya más de un sub-arreglo:
+        5.1.1. Tomar dos sub-arreglos.
+        5.1.2. Mezclarlos en un nuevo sub-arreglo ordenado.
+        5.1.3. Reemplazar los dos sub-arreglos originales con el nuevo sub-arreglo
+               en la lista de sub-arreglos.
+
+6. Imprimir el resultado final.
+    6.1. Recorrer el arreglo final y imprimir cada elemento.
 \end{verbatim}
 
 %-----------------------------------------------------------------|
