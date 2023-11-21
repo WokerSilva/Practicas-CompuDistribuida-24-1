@@ -45,17 +45,30 @@ mezcla (Merge Sort), como sigue:
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection*{Compilar}
-\begin{center}    
-    Forma de Compilar:\\ 
-    mpicc PracticaR_EdgarMontiel_CarlosCortes_MarcoSilva.c -o Merge
-\end{center}
+%\begin{small}
+%    \begin{verbatim}
+%mpicc Practica04_EdgarMontiel_CarlosCortes_MarcoSilva.c -o Merge
+%    \end{verbatim}            
+%\end{small}
 
-\subsection*{Ejecutar}
-\begin{center}
-    Forma de Ejecutar:\\
+\subsection*{Forma de compilar}
+%\begin{center}    
+%    Forma de Compilar:\\ 
+%    mpicc PracticaR_EdgarMontiel_CarlosCortes_MarcoSilva.c -o Merge
+%\end{center}
+\begin{verbatim}
+    mpicc Practica04_EdgarMontiel_CarlosCortes_MarcoSilva.c -o Merge
+\end{verbatim}            
+
+\subsection*{Forma de ejecutar}
+\begin{verbatim}
     ./Merge
-\end{center}
+\end{verbatim}            
+
+%\begin{center}
+%    Forma de Ejecutar:\\
+%    ./Merge
+%\end{center}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -64,29 +77,22 @@ mezcla (Merge Sort), como sigue:
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{verbatim}
-1. Se incluyen las bibliotecas necesarias: stdio.h para entrada y salida estándar, stdlib.h para funciones relacionadas con la memoria dinámica, y mpi.h para la programación paralela con MPI (Message Passing Interface).
 
-2. Se define una función print_array para imprimir un arreglo de enteros.
-
-3. Se define una función merge que realiza la mezcla de dos arreglos ordenados en un solo arreglo ordenado. Es parte del algoritmo de ordenación por mezcla.
-
-4. Se define una función merge_sort que implementa el algoritmo de ordenación por mezcla de manera recursiva. Divide el arreglo en dos mitades, ordena cada mitad por separado y luego combina las dos mitades ordenadas usando la función merge.
-
-5. Dento del main se inicia MPI, se obtiene el rango del proceso actual (rank) y el número total de procesos (size).
-    
-    5.1 El proceso con rango 0 (nodo maestro) genera un arreglo de números aleatorios si es el proceso con rango 0 y luego imprime el arreglo original.
-    
-    5.2 Se calcula el tamaño de los subarreglos locales (local_size) y se crea un arreglo local (local_array). Luego, el arreglo original se divide entre los nodos utilizando MPI_Scatter.
-    
-    5.3 Cada nodo ordena su subarreglo local utilizando la función merge_sort.
-
-    5.4 Los resultados parciales (los subarreglos ordenados localmente) se recopilan de nuevo en el nodo maestro utilizando MPI_Gather.
-
-    5.6 El nodo maestro imprime el arreglo ordenado final si es el proceso con rango 0. Luego, se finaliza MPI y se devuelve 0 para indicar la finalización exitosa del programa. 
-
-\end{verbatim}
-
+\begin{enumerate}
+    \item Se incluyen las bibliotecas necesarias: stdio.h para entrada y salida estándar, stdlib.h para funciones relacionadas con la memoria dinámica, y mpi.h para la programación paralela con MPI (Message Passing Interface).
+    \item Se define una función print$\_$array para imprimir un arreglo de enteros.
+    \item Se define una función merge que realiza la mezcla de dos arreglos ordenados en un solo arreglo ordenado. Es parte del algoritmo de ordenación por mezcla.
+    \item Se define una función merge$\_$sort que implementa el algoritmo de ordenación por mezcla de manera recursiva. Divide el arreglo en dos mitades, ordena cada mitad por separado y luego combina las dos mitades ordenadas usando la función merge.
+    \item Dento del main se inicia MPI, se obtiene el rango del proceso actual (rank) y el número total de procesos (size).
+    \begin{enumerate}
+        \item El proceso con rango 0 (nodo maestro) genera un arreglo de números aleatorios si es el proceso con rango 0 y luego imprime el arreglo original.
+        \item Se calcula el tamaño de los subarreglos locales (local$\_$size) y se crea un arreglo local (local$\_$array). Luego, el arreglo original se divide entre los nodos utilizando MPI$\_$Scatter.
+        \item Cada nodo ordena su subarreglo local utilizando la función merge$\_$sort.
+        \item Los resultados parciales (los subarreglos ordenados localmente) se recopilan de nuevo en el nodo maestro utilizando MPI$\_$Gather.
+        \item El nodo maestro imprime el arreglo ordenado final si es el proceso con rango 0. Luego, se finaliza MPI y se devuelve 0 para indicar la finalización exitosa del programa. 
+    \end{enumerate}    
+\end{enumerate}
+        
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
